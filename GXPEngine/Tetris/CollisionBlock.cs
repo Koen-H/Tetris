@@ -29,7 +29,7 @@ namespace GXPEngine.Tetris
             //setSprite("debug_block.png");
         }
 
-        private void setSprite(String blockColor)
+        private void SetSprite(String blockColor)
         {
             this.initializeFromTexture(Texture2D.GetInstance(blockColor, false));
         }
@@ -72,7 +72,7 @@ namespace GXPEngine.Tetris
             }
 
         }*/
-        public Boolean IsColliding()//Used to check if the clusterlbock/shape can move a direction.
+        public Boolean IsColliding()//Used to check if the clusterblock/shape can Move a direction.
         {
             GameObject[] collisions = GetCollisions();
             foreach (GameObject collision in collisions)
@@ -144,7 +144,7 @@ namespace GXPEngine.Tetris
         }
 
        
-        public void setOccupied()
+        public void SetOccupied()
         {
             GameObject[] collisions = GetCollisions();
             foreach(GameObject collision in collisions)
@@ -152,7 +152,7 @@ namespace GXPEngine.Tetris
                 //
                 if (collision is Block) {
                     Block block = (Block)collision;
-                    block.setOccupied(blockColor); 
+                    block.SetOccupied(blockColor); 
                 }
 
             }

@@ -13,10 +13,10 @@ namespace GXPEngine
         
         public Button(String blockColor, int coloms, int rows, string load) : base(blockColor, coloms, rows)
         {
-            this.loadLevel = load;
+            loadLevel = load;
             // Set the position of the button to the bottom middle of the screen:
 
-            this.SetXY(coloms, rows);
+            SetXY(coloms, rows);
             Console.WriteLine("A button has been created!");
         }
 

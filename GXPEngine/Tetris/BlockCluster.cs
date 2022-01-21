@@ -22,7 +22,7 @@ namespace GXPEngine.Tetris
         private List<CollisionBlock> blocks = new List<CollisionBlock>();//list with blocks, aka the shape
         private List<CollisionBlock> colliderBlocks, colliderBlocksBottom, colliderBlocksLeft, colliderBlocksRight, colliderBlocksTop;//list with colliderBlocks, aka the "raycast"
         private List<CollisionBlock> colliderBlocksRotation = new List<CollisionBlock>();//list with colliderBlocks used for Rotating the block;
-        private Boolean rotatedUpwards = false;// Based on the real game, if the rotate can't place it correctly, it will move it up. but this only happens once! After that it doesn't rotate
+        private Boolean rotatedUpwards = false;// Based on the real game, if the rotate can't place it correctly, it will Move it up. but this only happens once! After that it doesn't rotate
 
         public BlockCluster(Shape shape)
         {
@@ -51,37 +51,37 @@ namespace GXPEngine.Tetris
             {
                 case Shape.T:
                     Console.WriteLine("Constructing T");
-                    constructTShape();
+                    ConstructTShape();
                     break;
                 case Shape.I:
                     Console.WriteLine("Constructing I");
-                    constructRotatedIShape();
+                    ConstructRotatedIShape();
                     break;
                 case Shape.Square:
                     Console.WriteLine("Constructing Square");
-                    constructSquareShape();
+                    ConstructSquareShape();
                     break;
                 case Shape.J:
                     Console.WriteLine("Constructing J");
-                    constructJShape();
+                    ConstructJShape();
                     break;
                 case Shape.L:
                     Console.WriteLine("Constructing L");
-                    constructLShape();
+                    ConstructLShape();
                     break;
                 case Shape.Z:
                     Console.WriteLine("Constructing Z");
-                    constructZShape();
+                    ConstructZShape();
                     break;
                 case Shape.S:
                     Console.WriteLine("Constructing S");
-                    constructSShape();
+                    ConstructSShape();
                     break;     
             }
                
         }
 
-        private void constructTShape()
+        private void ConstructTShape()
         {
             //create the visual block
             String blockColor = "purple_block.png";
@@ -128,7 +128,7 @@ namespace GXPEngine.Tetris
             this.AddChild(colBlock8);
 
         }
-        private void constructIShape()
+        private void ConstructIShape()
         {
             //create the visual block
             String blockColor = "cyan_block.png";
@@ -178,7 +178,7 @@ namespace GXPEngine.Tetris
             this.AddChild(colBlock9);
             this.AddChild(colBlock10);
         }
-        private void constructRotatedIShape()
+        private void ConstructRotatedIShape()
         {
             //create the visual block
             String blockColor = "cyan_block.png";
@@ -228,7 +228,7 @@ namespace GXPEngine.Tetris
             this.AddChild(colBlock9);
             this.AddChild(colBlock10);
         }
-        private void constructSquareShape()
+        private void ConstructSquareShape()
         {
             //create the visual block
             String blockColor = "yellow_block.png";
@@ -273,7 +273,7 @@ namespace GXPEngine.Tetris
             this.AddChild(colBlock8);
 
         }
-        private void constructJShape()
+        private void ConstructJShape()
         {
             //create the visual block
             String blockColor = "blue_block.png";
@@ -321,7 +321,7 @@ namespace GXPEngine.Tetris
             this.AddChild(colBlock8);
             this.AddChild(colBlock9);
         }
-        private void constructLShape()
+        private void ConstructLShape()
         {
             //create the visual block
             String blockColor = "orange_block.png";
@@ -370,7 +370,7 @@ namespace GXPEngine.Tetris
             this.AddChild(colBlock8);
             this.AddChild(colBlock9);
         }
-        private void constructZShape()
+        private void ConstructZShape()
         {
             //create the visual block
             String blockColor = "red_block.png";
@@ -416,7 +416,7 @@ namespace GXPEngine.Tetris
             this.AddChild(colBlock7);
             this.AddChild(colBlock8);
         }
-        private void constructSShape()
+        private void ConstructSShape()
         {
             //create the visual block
             String blockColor = "green_block.png";
@@ -464,13 +464,13 @@ namespace GXPEngine.Tetris
         }
 
 
-        public void moveDown()//move the block down by one grid
+        public void MoveDown()//Move the block down by one grid
         {
-            if (isColliding(colliderBlocksBottom))
+            if (IsColliding(colliderBlocksBottom))
             {
                 foreach (CollisionBlock block in blocks)
                 {
-                    block.setOccupied();
+                    block.SetOccupied();
                 }
                 GameManager.NextBlockCluster();
             }
@@ -481,30 +481,30 @@ namespace GXPEngine.Tetris
 
 
         }
-        public void moveUp()//move the block back up, this is used for a upward rotate.
+        public void MoveUp()//Move the block back up, this is used for a upward rotate.
         {
             this.y -= GameManager.blockSize;
 
         }
-        public void moveLeft()//move the block left by one grid
+        public void MoveLeft()//Move the block left by one grid
         {
-            if (!isColliding(colliderBlocksLeft))
+            if (!IsColliding(colliderBlocksLeft))
             {
                 this.x -= GameManager.blockSize;
                
             }
             
         }
-        public void moveRight()//move the block right by one grid
+        public void MoveRight()//Move the block right by one grid
         {
-            if (!isColliding(colliderBlocksRight))
+            if (!IsColliding(colliderBlocksRight))
             {
                 this.x += GameManager.blockSize;
             }
             
         }
 
-        public void rotateLeft()
+        public void RotateLeft()
         {
             
             float resetRotation = this.rotation;
@@ -523,7 +523,7 @@ namespace GXPEngine.Tetris
             colliderBlocksBottom = colliderBlocksLeft;//list with colliderBlocks at the Bottom side;
             colliderBlocksLeft = colliderBlocksRotation;//list with colliderBlocks at the Left side;
         
-            if (rotationCheck())//check if rotation is broken, if it returns true. Set back to original position.
+            if (RotationCheck())//check if rotation is broken, if it returns true. Set back to original position.
             {
                 this.rotation =resetRotation;
                 this.x = resetX;
@@ -536,7 +536,7 @@ namespace GXPEngine.Tetris
                 colliderBlocksLeft = colliderBlocksRotation;//list with colliderBlocks at the Left side;
             }
         }
-        public void rotateRight()
+        public void RotateRight()
         {
             float resetRotation = this.rotation;
             float resetX = this.x;
@@ -555,7 +555,7 @@ namespace GXPEngine.Tetris
             colliderBlocksTop = colliderBlocksLeft;//list with colliderBlocks at the top side;
             colliderBlocksLeft = colliderBlocksRotation;//list with colliderBlocks at the Left side;
 
-            if (rotationCheck())//check if rotation is broken, if it returns true. Set back to original position.
+            if (RotationCheck())//check if rotation is broken, if it returns true. Set back to original position.
             {
                 this.rotation = resetRotation;
                 this.x = resetX;
@@ -569,99 +569,99 @@ namespace GXPEngine.Tetris
             }
         }
 
-        private Boolean rotationCheck()//TODO: Ask teacher how to optimize this
+        private Boolean RotationCheck()//TODO: Ask teacher how to optimize this
         {
             Boolean resetToOriginal = false;
-            if (isCollidingWithWall(true) ){// if it's inside the wall on the left
-                if (!isColliding(colliderBlocksRight))// and can go right
+            if (IsCollidingWithWall(true) ){// if it's inside the wall on the left
+                if (!IsColliding(colliderBlocksRight))// and can go right
                 {
-                    moveRight();// do so.
-                    if (isCollidingWithWall(true))// if it's STILL inside the wall on the left
+                    MoveRight();// do so.
+                    if (IsCollidingWithWall(true))// if it's STILL inside the wall on the left
                     {
-                        if (!isColliding(colliderBlocksRight))// and can go right
+                        if (!IsColliding(colliderBlocksRight))// and can go right
                         {
-                            moveRight();// do so.
+                            MoveRight();// do so.
 
                         }
-                        else// if not, move back to original position.
+                        else// if not, Move back to original position.
                         {
                             resetToOriginal = true;
                         }
                     }
                 }
-                else// if not, move back.
+                else// if not, Move back.
                 {
                     resetToOriginal = true;
                 }
             }
-            else if (isCollidingWithWall(false))
+            else if (IsCollidingWithWall(false))
             {// if it's inside the wall on the right
-                if (!isColliding(colliderBlocksLeft))// and can go left
+                if (!IsColliding(colliderBlocksLeft))// and can go left
                 {
-                    moveLeft();// do so.
-                    if (isCollidingWithWall(false))// if it's STILL inside the wall on the right
+                    MoveLeft();// do so.
+                    if (IsCollidingWithWall(false))// if it's STILL inside the wall on the right
                     {
-                        if (!isColliding(colliderBlocksLeft))// and can go left
+                        if (!IsColliding(colliderBlocksLeft))// and can go left
                         {
-                            moveLeft();// do so.
+                            MoveLeft();// do so.
 
                         }
-                        else// if not, move back to original position. and it can't rotate
+                        else// if not, Move back to original position. and it can't rotate
                         {
                             resetToOriginal = true;
                         }
                     }
                 }
-                else// if not, move back.
+                else// if not, Move back.
                 {
                     resetToOriginal = true;
                 }
             }
             else if (IsCollidingWithBottomOrTop(true))
             {
-                if (!isColliding(colliderBlocksTop) && !rotatedUpwards)// can go up
+                if (!IsColliding(colliderBlocksTop) && !rotatedUpwards)// can go up
                 {
-                    moveUp();// do so.
+                    MoveUp();// do so.
                     rotatedUpwards = true;
-                    if (IsCollidingWithBottomOrTop(true))// if it's still inside the ground, move up again. This could happen with the I shape!
+                    if (IsCollidingWithBottomOrTop(true))// if it's still inside the ground, Move up again. This could happen with the I shape!
                     {
-                        if (!isColliding(colliderBlocksTop))// and can go up
+                        if (!IsColliding(colliderBlocksTop))// and can go up
                         {
-                            moveUp();// do so.
+                            MoveUp();// do so.
 
                         }
-                        else// if not, move back to original position.
+                        else// if not, Move back to original position.
                         {
                             resetToOriginal = true;
                         }
                     }
                 }
-                else// if not, move back.
+                else// if not, Move back.
                 {
                     resetToOriginal = true;
                 }
             }
-            if (isColliding(blocks)) //OPTIMISE
+            if (IsColliding(blocks)) //OPTIMISE
             {
                 if (!rotatedUpwards)// can go up
                 {
-                    moveUp();// do so.
+                    MoveUp();// do so.
                     rotatedUpwards = true;
-                    if (isColliding(blocks))// if it's still inside a block, move up again. 
+                    if (IsColliding(blocks))// if it's still inside a block, Move up again. 
                     {
-                        moveUp();
-                        if (isColliding(blocks))// if it's STILL collding, check left and right.
+                        MoveUp();
+                        if (IsColliding(blocks))// if it's STILL collding, check left and right.
                         {
-                            if (isColliding(colliderBlocksRight))//if it can move to the right, do so
+                            if (IsColliding(colliderBlocksRight))//if it can Move to the right, do so
                             {
-                                moveRight();
-                                if (isColliding(blocks))// if it's still inside a block, try the left option.
+                                MoveRight();
+                                if (IsColliding(blocks))// if it's still inside a block, try the left option.
                                 {
                                     this.x -= GameManager.blockSize;//Go back to previous to try the left option. NOTE: MoveLeft wouldn't always work here! using x-= instead
-                                    if (isColliding(colliderBlocksLeft))
+                                    if (IsColliding(colliderBlocksLeft))
                                     {
-                                        moveLeft();
-                                        if (isColliding(blocks))// if it's still inside a block, no rotation can be done and it should go back to roiginal
+                                        MoveLeft();
+                                        if (IsColliding(blocks))// if it's still inside a block, no rotation can be done and it should go back to roiginal
                                         {
                                             resetToOriginal = true;
                                             rotatedUpwards = false;
@@ -674,10 +674,10 @@ namespace GXPEngine.Tetris
                                     }
                                 }
                             }
-                            else if (isColliding(colliderBlocksLeft))
+                            else if (IsColliding(colliderBlocksLeft))
                             {
-                                moveLeft();
-                                if (isColliding(blocks))// if it's still inside a block, no rotation can be done and it should go back to roiginal
+                                MoveLeft();
+                                if (IsColliding(blocks))// if it's still inside a block, no rotation can be done and it should go back to roiginal
                                 {
                                     resetToOriginal = true;
                                 }
@@ -693,45 +693,45 @@ namespace GXPEngine.Tetris
                 }
                 else// if not, try one to the left, or one to the right. Else go back to original
                 {
-                    if (isColliding(colliderBlocksRight))//if it can move to the right, do so
+                    if (IsColliding(colliderBlocksRight))//if it can Move to the right, do so
                     {
                         this.x += GameManager.blockSize;
-                        if (isColliding(blocks))// if it's still inside a block, try the left option.
+                        if (IsColliding(blocks))// if it's still inside a block, try the left option.
                         {
                             this.x -= GameManager.blockSize;//Go back to previous to try the left option. NOTE: MoveLeft wouldn't always work here! using x-= instead
-                            if (isColliding(colliderBlocksLeft))
+                            if (IsColliding(colliderBlocksLeft))
                             {
-                                moveLeft();
-                                if (isColliding(blocks) || isCollidingWithWall(false) || isCollidingWithWall(true))// if it's still inside a block or wall, no rotation can be done and it should go back to original
+                                MoveLeft();
+                                if (IsColliding(blocks) || IsCollidingWithWall(false) || IsCollidingWithWall(true))// if it's still inside a block or wall, no rotation can be done and it should go back to original
                                 {
                                     resetToOriginal = true;
                                 }
                             }
                             else
                             {
-                                rotateRight();
+                                RotateRight();
                                 rotatedUpwards = false;
                             }
                         }
                     }
-                    else if (isColliding(colliderBlocksLeft))
+                    else if (IsColliding(colliderBlocksLeft))
                     {
                         this.x -= GameManager.blockSize;
-                        if (isColliding(blocks) || isCollidingWithWall(false) || isCollidingWithWall(true))// if it's still inside a block or wall, no rotation can be done and it should go back to roiginal
+                        if (IsColliding(blocks) || IsCollidingWithWall(false) || IsCollidingWithWall(true))// if it's still inside a block or wall, no rotation can be done and it should go back to roiginal
                         {
                             resetToOriginal = true;
                         }
                     }
                     else// if not, no rotation is happening!
                     {
-                        rotateRight();
+                        RotateRight();
                     }
                 }
             }
             return resetToOriginal;
         }
 
-        private Boolean isColliding(List<CollisionBlock> colliderBlocksList)
+        private Boolean IsColliding(List<CollisionBlock> colliderBlocksList)
         {
             foreach (CollisionBlock block in colliderBlocksList)
             {
@@ -742,7 +742,7 @@ namespace GXPEngine.Tetris
             }
             return false;
         }
-        private Boolean isCollidingWithWall(Boolean isLeft)
+        private Boolean IsCollidingWithWall(Boolean isLeft)
         {
             foreach (CollisionBlock block in blocks)
             {
@@ -770,15 +770,15 @@ namespace GXPEngine.Tetris
         }
         public Boolean CheckForGameOver()
         {
-            if (isColliding(blocks))
+            if (IsColliding(blocks))
             {
-                if (isColliding(colliderBlocksTop))// in the original tetris, it will move you one up! But if this isn't possible, then it's game OVER
+                if (IsColliding(colliderBlocksTop))// in the original tetris, it will Move you one up! But if this isn't possible, then it's game OVER
                 {
                     return true;
                 }
                 else
                 {
-                    moveUp();
+                    MoveUp();
                 }
             }
 

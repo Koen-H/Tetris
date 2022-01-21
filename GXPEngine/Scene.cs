@@ -13,10 +13,12 @@ namespace GXPEngine
     {
 
         private string levelToLoad;
-        private string background;
+        private Sprite background;
 
         public Scene(string map)
         {
+            background = new Sprite("background.jpg",false);
+            AddChild(background);
             levelToLoad = map;
             Construct();
         }

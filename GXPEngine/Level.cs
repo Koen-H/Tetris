@@ -40,7 +40,8 @@ namespace GXPEngine
             AddChild(playField);
             Block[,] levelGrid = new Block[mainLayer.Width, mainLayer.Height];
             float blockSize = GameManager.blockSize;
-            float playFieldCenter = 11;
+            float playFieldCenterX = 11;
+            float playFieldCenterY = 5;
 
             //  Console.WriteLine(tileArray);
             for (int row = 0; row < mainLayer.Height; row++)
@@ -83,7 +84,8 @@ namespace GXPEngine
                             break;
                         case 8: //START POSITION
                             tile = new Block(col, row, "empty_block.png", BlockType.Grid);
-                            playFieldCenter = col * blockSize;
+                            playFieldCenterX = col * blockSize;
+                            playFieldCenterY = row * blockSize;                            
                             break;
                         case 9://CYAN-BLOCK
                             tile = new Block(col, row, "cyan_block.png", BlockType.GridFilled);
@@ -115,10 +117,13 @@ namespace GXPEngine
                     tile.SetXY(col * blockSize, row * blockSize);
                 }
             }
-            GameManager.SetupPlayField(mainLayer.Height, mainLayer.Width, playFieldCenter, levelGrid);
-            GameManager.grid = levelGrid;
 
-            MyGame.playField = playField;
+            GameManager.SetupPlayField(mainLayer.Height, mainLayer.Width, playFieldCenterX, playFieldCenterY, levelGrid);
+            //GameManager.grid = levelGrid;
+
+            MyGame myGame = (MyGame)game;
+            myGame.DestroyAll();
+                myGame.playField = playField;
             GameManager.StartTetris();
             // GameManager.CheckForTetris();
         }

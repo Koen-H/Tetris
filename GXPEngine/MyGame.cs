@@ -6,7 +6,7 @@ using System.Collections;
 using System.Collections.Generic;
 public class MyGame : Game
 {
-    public static Pivot playField;// this is where tetris plays,it drops down
+    public Pivot playField;// this is where tetris plays,it drops down
     public static Pivot uI;// This is the UI
     private List<Button> buttonsList = new List<Button>();
     public Scene mainMenu;
@@ -17,7 +17,7 @@ public class MyGame : Game
 
     }
 
-    public MyGame() : base(1920, 1080, false,true)		// Create a window that's 800x600 and NOT fullscreen
+    public MyGame() : base(1920, 1080, false,true, 640, 360)		// Create a window that's 800x600 and NOT fullscreen
 	{
 
         mainMenu = new Scene("main_menu.tmx");
@@ -66,7 +66,7 @@ public class MyGame : Game
     }
 
 	// For every game object, Update is called every frame, by the engine:
-    void DestroyAll()
+    public void DestroyAll()
     {
         List<GameObject> children = GetChildren();
         foreach(GameObject child in children)

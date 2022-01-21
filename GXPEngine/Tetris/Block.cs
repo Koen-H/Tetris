@@ -33,7 +33,7 @@ namespace GXPEngine.Tetris
         }
 
 
-        public void setSprite(String blockColor)
+        public void SetSprite(String blockColor)
         {
             blockSprite = blockColor;
             this.initializeFromTexture(Texture2D.GetInstance(blockColor, false));
@@ -45,10 +45,10 @@ namespace GXPEngine.Tetris
         }
 
 
-        public void setOccupied(String blockColor)
+        public void SetOccupied(String blockColor)
         {
             blockType = BlockType.GridFilled;
-            setSprite(blockColor);
+            SetSprite(blockColor);
         }
 
     }
