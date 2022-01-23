@@ -9,14 +9,16 @@ using TiledMapParser;
 namespace GXPEngine
 {
     
-    public class Scene : Pivot
+    public class Scene : GameObject
     {
+        private MyGame myGame;
 
         private string levelToLoad;
         private Sprite background;
 
         public Scene(string map)
         {
+            myGame = (MyGame)game;
             background = new Sprite("background.jpg",false);
             AddChild(background);
             levelToLoad = map;
@@ -60,27 +62,26 @@ namespace GXPEngine
                             SceneObject tile = new SceneObject(tiles.Image.FileName, tiles.Columns, tiles.Rows);
                             switch (tileNumber) { 
                                 case 9://Save Coordinate
-                                    GameManager.saveCoordinateX = col * tile.width;
-                                    GameManager.saveCoordinateY = row * tile.height;
+
+                                    myGame.gameManager.SetSaveCoordinates(col * tile.width, row * tile.height);
                                     tile = new SceneObject(tiles.Image.FileName, tiles.Columns, tiles.Rows);
                                     break;
                                 case 10://Exit Coordinate button
-                                    //GameManager.playFieldCoordinateX = col * tile.width,;
-                                   // GameManager.playFieldCoordinateY = tiles.Rows;
-                                     tile = new SceneObject(tiles.Image.FileName, tiles.Columns, tiles.Rows);
+                                    
+                                     Button exitButton = new Button("exit_button.png", tiles.Columns, tiles.Rows, "main_menu.tmx");
+                                    AddChild(exitButton);
                                     break;
                                 case 11://Upcoming Coordinate
-                                    GameManager.upcomingBlockClusterX = col * tile.width;
-                                    GameManager.upcomingBlockClusterY = row * tile.height;
+                                    myGame.gameManager.SetUpcomingCoordinates(col * tile.width, row * tile.height);
                                     tile = new SceneObject(tiles.Image.FileName, tiles.Columns, tiles.Rows);
                                     break;
                                 case 12://PlayfieldCoordinate
-                                    GameManager.playFieldCoordinateX = col * tile.width;
-                                    GameManager.playFieldCoordinateY = row * tile.height;
+                                    myGame.gameManager.SetPlayfieldCoordinates(col * tile.width, row * tile.height);
                                     tile = new SceneObject(tiles.Image.FileName, tiles.Columns, tiles.Rows);
                                     break;
                                 case 13://Score coordinate
                                     tile = new SceneObject(tiles.Image.FileName, tiles.Columns, tiles.Rows);
+                                    myGame.gameManager.SetScoreDisplayCoordinates(col * tile.width, row * tile.height);
                                     GameManager.scoreDisplay = new ScoreDisplay();
                                     GameManager.scoreDisplay.SetXY(col * tile.width, row * tile.height);
                                     AddChild(GameManager.scoreDisplay);
@@ -94,8 +95,6 @@ namespace GXPEngine
                             tile.SetFrame(tileNumber - tiles.FirstGId);
                             tile.SetXY(col * tile.width, row * tile.height);
                             this.AddChild(tile);
-
-
 
                         }
                     }

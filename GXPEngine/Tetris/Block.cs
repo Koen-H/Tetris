@@ -13,6 +13,7 @@ namespace GXPEngine.Tetris
 
     public class Block : Sprite //this is one block, a BlockCluster is the shape.
     {
+        private MyGame myGame;
        // bool isCollisionCheckBlock;
         public String blockSprite;
         public BlockType blockType;
@@ -22,7 +23,8 @@ namespace GXPEngine.Tetris
 
         public Block(float xParentPos, float yParentPos, String blockColor, BlockType blockType):base(blockColor)
         {
-            this.blockSize = GameManager.blockSize;
+            myGame = (MyGame)game;
+            this.blockSize = myGame.gameManager.blockSize;
             this.xParentPos = xParentPos;
             this.yParentPos = yParentPos;
             this.blockSprite = blockColor;

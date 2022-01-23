@@ -10,12 +10,14 @@ namespace GXPEngine
 {
     public class Level : GameObject //Level class is used for the level, where the action happens.
     {
+        private MyGame myGame;
 
         private string levelToLoad;
         private Pivot playField;
 
         public Level(string map)
         {
+            myGame = (MyGame)game;
             levelToLoad = map;
             Construct();
         }
@@ -36,10 +38,9 @@ namespace GXPEngine
             short[,] tileArray = mainLayer.GetTileArray();
 
             playField = new Pivot();
-            playField.SetXY(GameManager.playFieldCoordinateX, GameManager.playFieldCoordinateY);
-            AddChild(playField);
+
             Block[,] levelGrid = new Block[mainLayer.Width, mainLayer.Height];
-            float blockSize = GameManager.blockSize;
+            float blockSize = myGame.gameManager.blockSize;
             float playFieldCenterX = 11;
             float playFieldCenterY = 5;
 
@@ -118,14 +119,17 @@ namespace GXPEngine
                 }
             }
 
-            GameManager.SetupPlayField(mainLayer.Height, mainLayer.Width, playFieldCenterX, playFieldCenterY, levelGrid);
+           myGame.gameManager.SetupPlayField(mainLayer.Height, mainLayer.Width, playFieldCenterX, playFieldCenterY, levelGrid);
             //GameManager.grid = levelGrid;
 
-            MyGame myGame = (MyGame)game;
+           
             myGame.DestroyAll();
-                myGame.playField = playField;
-            GameManager.StartTetris();
+            myGame.playField = playField;
+            myGame.gameManager.StartTetris();
             // GameManager.CheckForTetris();
+            playField.SetXY(GameManager.playFieldCoordinateX, GameManager.playFieldCoordinateY);
+            playField.SetScaleXY(1.6f,1.6f);
+            AddChild(playField);
         }
 
         public void SpawnObjects(Map mapData)

@@ -18,14 +18,18 @@ namespace GXPEngine.Tetris
 
     public class BlockCluster : GameObject//This is the shape, the parent containing the small blocks
     {
+        private MyGame myGame;
         Shape shape;// the type, aka the shape
         private List<CollisionBlock> blocks = new List<CollisionBlock>();//list with blocks, aka the shape
         private List<CollisionBlock> colliderBlocks, colliderBlocksBottom, colliderBlocksLeft, colliderBlocksRight, colliderBlocksTop;//list with colliderBlocks, aka the "raycast"
         private List<CollisionBlock> colliderBlocksRotation = new List<CollisionBlock>();//list with colliderBlocks used for Rotating the block;
         private Boolean rotatedUpwards = false;// Based on the real game, if the rotate can't place it correctly, it will Move it up. but this only happens once! After that it doesn't rotate
+        private float blockSize;
 
         public BlockCluster(Shape shape)
         {
+            myGame = (MyGame)game;
+            blockSize = myGame.gameManager.blockSize;
             colliderBlocks = new List<CollisionBlock>();
             colliderBlocksBottom = new List<CollisionBlock>();
             colliderBlocksLeft = new List<CollisionBlock>();
@@ -464,42 +468,56 @@ namespace GXPEngine.Tetris
         }
 
 
-        public void MoveDown()//Move the block down by one grid
+        public void MoveDown(string sound = null)//Move the block down by one grid
         {
-            if (IsColliding(colliderBlocksBottom))
+            if (sound != null)
             {
+                new Sound(sound).Play();
+            }
+            if (IsColliding(colliderBlocksBottom))
+            {   
                 foreach (CollisionBlock block in blocks)
                 {
                     block.SetOccupied();
                 }
-                GameManager.NextBlockCluster();
+                myGame.gameManager.NextBlockCluster();
+                new Sound("snap.wav").Play();
             }
             else
             {
-                this.y += GameManager.blockSize;
+                this.y += blockSize;
             }
 
 
         }
         public void MoveUp()//Move the block back up, this is used for a upward rotate.
         {
-            this.y -= GameManager.blockSize;
+            this.y -= blockSize;
 
         }
-        public void MoveLeft()//Move the block left by one grid
+        public void MoveLeft(string sound = null)//Move the block left by one grid
         {
+            
             if (!IsColliding(colliderBlocksLeft))
             {
-                this.x -= GameManager.blockSize;
-               
+                if (sound != null)
+                {
+                    new Sound(sound).Play();
+                }
+                this.x -= blockSize;
+
             }
-            
+
         }
-        public void MoveRight()//Move the block right by one grid
+        public void MoveRight(string sound = null)//Move the block right by one grid
         {
             if (!IsColliding(colliderBlocksRight))
             {
-                this.x += GameManager.blockSize;
+                if (sound != null)
+                {
+                    new Sound(sound).Play();
+                }
+                this.x += blockSize;
             }
             
         }
@@ -657,7 +675,7 @@ namespace GXPEngine.Tetris
                                 MoveRight();
                                 if (IsColliding(blocks))// if it's still inside a block, try the left option.
                                 {
-                                    this.x -= GameManager.blockSize;//Go back to previous to try the left option. NOTE: MoveLeft wouldn't always work here! using x-= instead
+                                    this.x -= blockSize;//Go back to previous to try the left option. NOTE: MoveLeft wouldn't always work here! using x-= instead
                                     if (IsColliding(colliderBlocksLeft))
                                     {
                                         MoveLeft();
@@ -695,10 +713,10 @@ namespace GXPEngine.Tetris
                 {
                     if (IsColliding(colliderBlocksRight))//if it can Move to the right, do so
                     {
-                        this.x += GameManager.blockSize;
+                        this.x += blockSize;
                         if (IsColliding(blocks))// if it's still inside a block, try the left option.
                         {
-                            this.x -= GameManager.blockSize;//Go back to previous to try the left option. NOTE: MoveLeft wouldn't always work here! using x-= instead
+                            this.x -= blockSize;//Go back to previous to try the left option. NOTE: MoveLeft wouldn't always work here! using x-= instead
                             if (IsColliding(colliderBlocksLeft))
                             {
                                 MoveLeft();
@@ -716,7 +734,7 @@ namespace GXPEngine.Tetris
                     }
                     else if (IsColliding(colliderBlocksLeft))
                     {
-                        this.x -= GameManager.blockSize;
+                        this.x -= blockSize;
                         if (IsColliding(blocks) || IsCollidingWithWall(false) || IsCollidingWithWall(true))// if it's still inside a block or wall, no rotation can be done and it should go back to roiginal
                         {
                             resetToOriginal = true;

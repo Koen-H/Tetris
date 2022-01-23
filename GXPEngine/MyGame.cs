@@ -6,10 +6,11 @@ using System.Collections;
 using System.Collections.Generic;
 public class MyGame : Game
 {
-    public Pivot playField;// this is where tetris plays,it drops down
-    public static Pivot uI;// This is the UI
+    public Pivot playField = new Pivot();// this is where tetris plays,it drops down
+    //public Pivot uI = new Pivot();// This is the UI
     private List<Button> buttonsList = new List<Button>();
     public Scene mainMenu;
+    public GameManager gameManager;
 
     static void Main()                          // Main() is the first method that's called when the program is run
     {
@@ -17,55 +18,41 @@ public class MyGame : Game
 
     }
 
-    public MyGame() : base(1920, 1080, false,true, 640, 360)		// Create a window that's 800x600 and NOT fullscreen
+    public MyGame() : base(1920, 1080, false,true, 640, 360)		// Create a window that's 640 x 360, with a resolution of 1920 x 1080
 	{
-
-        mainMenu = new Scene("main_menu.tmx");
-        LoadScene(mainMenu);
-
+        
+        LoadMainMenu();
 
         //level = new Scene("Level");
 
-        // LoadLevel();
-        //levelSelect = new Scene("Level Select");
-
-        /*
-       playField = new Pivot();
-       AddChild(playField);
-
-       
-       //LoadScene(mainMenu);
-       GameManager.CreatePlayField(playField);
-
-       GameManager.StartTetris(playField);
-       //GameManager.grid[5,5].setOccupied("green_block.png");
-
-       // this.loadScene = loadScene;
-       // Create a small button canvas (EasyDraw):
-       */
-
-
-
     }
-    public void LoadScene(Scene scene)
+    public void LoadScene(GameObject scene)// used to load Scenes, and playfield levels
     {
         Console.WriteLine("Loading scene: " + scene);
-        DestroyAll();
+        //
         List<GameObject> children = scene.GetChildren();
         foreach (GameObject child in children)
         {
-            //Console.WriteLine("object");
             AddChild(child);
         }
-        //buttonsList = scene.GetButtons() ;
     }
-    public void LoadLevel()
+    public void LoadLevel(string loadLevel)
     {
-        Scene levelUI = new Scene("scene_level");
-        LoadScene(levelUI);// load a level
+        DestroyAll();
+        Level level = new Level(loadLevel);
+        Scene UI = new Scene("scene_level.tmx");// this is the ui
+        LoadScene(UI);// load the UI
+        LoadScene(level);// load the level
+    }
+    public void LoadMainMenu()
+    {
+        gameManager = new GameManager(this);
+        DestroyAll();
+        mainMenu = new Scene("main_menu.tmx");
+        LoadScene(mainMenu);
+        gameManager.QuitTetris();
     }
 
-	// For every game object, Update is called every frame, by the engine:
     public void DestroyAll()
     {
         List<GameObject> children = GetChildren();
@@ -78,7 +65,7 @@ public class MyGame : Game
 
     void Update()
     {
-        GameManager.Update();
+        gameManager.Update();
         foreach (Button button in buttonsList)
         {
             button.Update();

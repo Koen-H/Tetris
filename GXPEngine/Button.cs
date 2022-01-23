@@ -26,19 +26,17 @@ namespace GXPEngine
             {
                 if (HitTestPoint(Input.mouseX, Input.mouseY))
                 {
-                    //MyGame.LoadLevel();
-                    //MyGame.playField
-                    
+                    Console.WriteLine("clickedButton, now loading level:" + loadLevel);
+                    MyGame myGame = (MyGame)game;
+                    if (loadLevel != "main_menu.tmx")
+                    {
 
-
-                    //MyGame.LoadLevel(loadLevel);  
-                    Console.WriteLine("clickedButton");
-                    Scene levelScene = new Scene("scene_level.tmx");
-                    AddChild(levelScene);//should be done with loadlevel!
-                    
-                    //
-                    Level level = new Level(loadLevel);
-                    AddChild(level);//should be done with loadlevel!
+                        myGame.LoadLevel(loadLevel);
+                    }
+                    else
+                    {
+                        myGame.LoadMainMenu();
+                    }
                 }
             }
         }

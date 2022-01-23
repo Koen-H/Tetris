@@ -9,6 +9,8 @@ namespace GXPEngine.Tetris
     //TODO, Make this extend with Block.cs
     public class CollisionBlock : Sprite //this is one block, a BlockCluster is the shape.
     {
+        MyGame myGame;
+
         // bool isCollisionCheckBlock;
         protected String blockColor;
         BlockType blockType;
@@ -19,12 +21,13 @@ namespace GXPEngine.Tetris
 
         public CollisionBlock(float xParentPos, float yParentPos, String blockColor, BlockType blockType) : base(blockColor)
         {
-            this.blockSize = GameManager.blockSize;
+            myGame = (MyGame)game;
+            blockSize = myGame.gameManager.blockSize;
             this.xParentPos = xParentPos;
             this.yParentPos = yParentPos;
             this.blockColor = blockColor;
             this.blockType = blockType;
-            this.SetXY(blockSize * xParentPos, blockSize * yParentPos);
+            SetXY(blockSize * xParentPos, blockSize * yParentPos);
             //AddChild(blockSprite);
             //setSprite("debug_block.png");
         }
