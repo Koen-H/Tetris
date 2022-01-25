@@ -130,7 +130,7 @@ namespace GXPEngine
             playField.SetXY(myGame.gameManager.playFieldCoordinateX, myGame.gameManager.playFieldCoordinateY);
             playField.SetScaleXY(1.6f,1.6f);
             AddChild(playField);
-            myGame.gameManager.StartTetris();
+            
         }
 
         public void SpawnObjects(Map mapData)

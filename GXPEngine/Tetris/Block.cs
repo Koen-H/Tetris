@@ -30,6 +30,7 @@ namespace GXPEngine.Tetris
             this.blockSprite = blockColor;
             this.blockType = blockType;
             this.SetXY(blockSize * xParentPos, blockSize * yParentPos);
+            
             //AddChild(blockSprite);
             //setSprite("debug_block.png");
         }

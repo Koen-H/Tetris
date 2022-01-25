@@ -30,6 +30,7 @@ namespace GXPEngine.Tetris
         public BlockCluster(Shape _shape, Boolean _isGhostBlock = false)
         {
             isGhostBlock = _isGhostBlock;
+
             myGame = (MyGame)game;
             blockSize = myGame.gameManager.blockSize;
             colliderBlocks = new List<CollisionBlock>();
@@ -38,6 +39,7 @@ namespace GXPEngine.Tetris
             colliderBlocksRight = new List<CollisionBlock>();
             colliderBlocksTop = new List<CollisionBlock>();
             CreateShape(_shape);
+
         }
         public Shape Shape{
             get{
@@ -83,7 +85,13 @@ namespace GXPEngine.Tetris
                     ConstructSShape();
                     break;     
             }
-               
+            if (isGhostBlock)
+            {
+                foreach (CollisionBlock block in blocks)
+                {
+                    block.alpha = 0.5f;
+                }
+            }
         }
 
         private void ConstructTShape()

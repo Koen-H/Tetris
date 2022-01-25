@@ -15,6 +15,24 @@ public class MyGame : Game
     public SoundChannel backgroundSound;
     Boolean disableMusic;
 
+
+   /* CONTROLS:
+    *  A = LEFT 
+    *  D = RIGHT
+    *  Q = ROTATE LEFT
+    *  E = ROTATE RIGHT
+    *  W = HARD DROP
+    *  S = SOFT DROP
+    *  F = SAVE BLOCK
+    *  SPACE = SAVE BLOCK
+    *  M = MUTE AUDIO
+    *  
+    *  F1 = Diagnostics in console
+    * 
+    * 
+    * */
+
+
     static void Main()                          // Main() is the first method that's called when the program is run
     {
         new MyGame().Start();
@@ -46,6 +64,7 @@ public class MyGame : Game
         Scene UI = new Scene("scene_level.tmx");// this is the ui
         LoadScene(UI);// load the UI
         LoadScene(level);// load the level
+        gameManager.StartTetris();
     }
     public void LoadMainMenu()
     {
@@ -78,6 +97,14 @@ public class MyGame : Game
         if (Input.GetKeyDown(Key.F1))
         {
             Console.WriteLine(GetDiagnostics());
+        }
+        if (Input.GetKeyDown(Key.M))
+        {
+            disableMusic = !disableMusic;
+            if (backgroundSound.IsPlaying)
+            {
+                backgroundSound.Stop();
+            }
         }
     }
 

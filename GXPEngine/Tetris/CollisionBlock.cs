@@ -28,8 +28,10 @@ namespace GXPEngine.Tetris
             this.blockColor = blockColor;
             this.blockType = blockType;
             SetXY(blockSize * xParentPos, blockSize * yParentPos);
-            //AddChild(blockSprite);
-            //setSprite("debug_block.png");
+            if (blockType == BlockType.CollisionBlock)
+            {
+                alpha = 0.0f;
+            }
         }
 
         private void SetSprite(String blockColor)
@@ -37,44 +39,6 @@ namespace GXPEngine.Tetris
             this.initializeFromTexture(Texture2D.GetInstance(blockColor, false));
         }
 
-        /*void OnCollision(GameObject other)
-        {
-            if (other is Block)
-            {
-                Block block = (Block)other;
-                if (block.blockType == BlockType.GridFilled || block.blockType == BlockType.WallBottom)
-                {
-                    GameManager.currentBlockCluster.isColliding = true;
-                }
-            }
-            /*
-          //  this.colliding = other;
-            //Console.WriteLine(other.name);
-            if (blockType == BlockType.Block)
-            {
-                Console.WriteLine("It's a block");
-
-                if (other.name == "gray_block_left.png")
-                {
-                    //parent.moveRight() doesn't work
-                    GameManager.currentBlockCluster.moveRight();
-                    Console.WriteLine(this.parent.name);
-                }
-                else if (other.name == "gray_block_right.png")
-                {
-                    //parent.moveLeft() doesn't work
-                    GameManager.currentBlockCluster.moveLeft();
-                    Console.WriteLine(this.parent.name);
-                }
-                else if (other.name == "gray_block_bottom.png")
-                {
-                    //parent.moveLeft() doesn't work
-                    GameManager.currentBlockCluster.isColliding = true;
-                    Console.WriteLine(this.parent.name);
-                }
-            }
-
-        }*/
         public Boolean IsColliding()//Used to check if the clusterblock/shape can Move a direction.
         {
             GameObject[] collisions = GetCollisions();

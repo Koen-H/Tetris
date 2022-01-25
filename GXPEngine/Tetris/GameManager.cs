@@ -36,7 +36,8 @@ namespace GXPEngine.Tetris
         public float saveCoordinateX;
         public float saveCoordinateY;
         private bool savedBlockClusterCooldown;
-        BlockCluster ghostBlockCluster; // This cluster is used to determine and identify the place of the "snap" function.
+        BlockCluster ghostBlockCluster; // This cluster is used to determine and identify the place of the "snap" function. Also know as hard drop.
+        int hardDropScore;
 
         List<Shape> upcomingShapes;
         public BlockCluster upcomingBlockCluster;
@@ -95,17 +96,21 @@ namespace GXPEngine.Tetris
                         }
                         //note, no sound effect if it gets dropped by the game itself!
                         currentBlockCluster.MoveDown(sound);
+                        SetGhostBlockClusterPosition();
                     }
-                    if (Input.GetKeyDown(Key.F))//Save the blockCluster
+                    if (Input.GetKeyDown(Key.F) || Input.GetKeyDown(Key.SPACE))//Save the blockCluster
                     {
                         SaveBlockCluster();
+
                     }
-                    if (Input.GetKeyDown(Key.W))//Goes up for now, 
+                    if (Input.GetKeyDown(Key.W))
                     {
-                        currentBlockCluster.MoveUp();
-                       /* currentBlockCluster.SetXY(ghostBlockCluster.x, ghostBlockCluster.y); 
+                       // currentBlockCluster.MoveUp();
+                        //Note, move the current block cluster to the ghost cluster and then set the curren cluster, as the block cluster has incorrect alpha.
+                        currentBlockCluster.SetXY(ghostBlockCluster.x, ghostBlockCluster.y); //Disabled, as it breaks the game right now
                         currentBlockCluster.SetBlock();
-                        new Sound("hard_drop.wav").Play();*/
+                        scoreDisplay.ApplyPoints(hardDropScore);
+                        new Sound("hard_drop.wav").Play();
                     }
                     if (Input.GetKey(Key.A) && Time.time > lastMove + moveInterval)
                     {
@@ -120,6 +125,7 @@ namespace GXPEngine.Tetris
                             sound = "move_hold.wav";
                         }
                         currentBlockCluster.MoveLeft(sound);
+                        SetGhostBlockClusterPosition();
                     }
                     if (Input.GetKey(Key.D) && Time.time > lastMove + moveInterval)
                     {
@@ -135,15 +141,18 @@ namespace GXPEngine.Tetris
                             sound = "move_hold.wav";
                         }
                         currentBlockCluster.MoveRight(sound);
+                        SetGhostBlockClusterPosition();
 
                     }
                     if (Input.GetKeyDown(Key.Q))
                     {
                         currentBlockCluster.RotateLeft();
+                        SetGhostBlockClusterRotation(true);
                     }
                     if (Input.GetKeyDown(Key.E))
                     {
                         currentBlockCluster.RotateRight();
+                        SetGhostBlockClusterRotation(false);
                     }
 
                 }
@@ -319,7 +328,7 @@ namespace GXPEngine.Tetris
                 }
             
         }
-        private Block GetBlock(int x, int y)
+        private Block GetBlock(int x, int y)//Get a block via the grid using x and Y
         {
             try
             {
@@ -349,16 +358,18 @@ namespace GXPEngine.Tetris
             upcomingBlockCluster = new BlockCluster(GetRandomShape());
             upcomingBlockCluster2 = new BlockCluster(GetRandomShape());
             upcomingBlockCluster3 = new BlockCluster(GetRandomShape());
+            myGame.AddChild(upcomingBlockCluster2);
+            myGame.AddChild(upcomingBlockCluster3);
             //TODO: FIx why it doesn't appear in the first update.
             NextBlockCluster();
             playingTetris = true;
             myGame.PlayBackgroundMusic("playing_game.wav");
         }
-        public void QuitTetris()
+        public void QuitTetris()//Stop the game from working.
         {
             playingTetris = false;
         }
-        public void NextBlockCluster(Boolean isSave = false)
+        public void NextBlockCluster(Boolean isSave = false)//The sequence to load the next blockCluster
         {
             IncreaseDifficulty();// A new block means a new, higher drop speed!
             if (currentBlockCluster != null)
@@ -385,21 +396,31 @@ namespace GXPEngine.Tetris
             upcomingBlockCluster2.SetScaleXY(1.2f, 1.2f);
             upcomingBlockCluster3.SetScaleXY(1.2f, 1.2f);
             myGame.AddChild(upcomingBlockCluster3);
-            SetGhostBlockCluster();
+            CreateGhostBlockCluster();
+            SetGhostBlockClusterPosition();
             savedBlockClusterCooldown = false;
             CheckForGameOver();
         }
+
         private void SetGhostBlockClusterPosition()//set the coordinates of the ghostblockcluster
         {
             ghostBlockCluster.SetXY(currentBlockCluster.x, currentBlockCluster.y);
-            Console.WriteLine("Setting Ghost Block Cluster");
-            ghostBlockCluster.y += blockSize*18;
-            /*while (ghostBlockCluster.IsColliding(ghostBlockCluster.colliderBlocksBottom)) //ASK WIEBE THE HERO
+            //Console.WriteLine("Setting Ghost Block Cluster" + ghostBlockCluster.IsColliding(ghostBlockCluster.colliderBlocksBottom));
+            hardDropScore = 0;
+            while (!ghostBlockCluster.IsColliding(ghostBlockCluster.colliderBlocksBottom))
             {
+                hardDropScore++;
                 ghostBlockCluster.y += blockSize; ;
-            }*/
+            }
         }
-        private void SetGhostBlockCluster()//set the ghostblockcluster, used in nextBlockCluster().
+        private void SetGhostBlockClusterRotation(Boolean rotateLeft)//Rotates the ghostBlockCluster
+        {
+            ghostBlockCluster.SetXY(currentBlockCluster.x, currentBlockCluster.y);
+            if (rotateLeft) ghostBlockCluster.RotateLeft();
+            else ghostBlockCluster.RotateRight();
+            SetGhostBlockClusterPosition();
+        }
+        private void CreateGhostBlockCluster()//set the ghostblockcluster, used in nextBlockCluster().
         {
             if (ghostBlockCluster != null)
             {
@@ -407,7 +428,7 @@ namespace GXPEngine.Tetris
             }
             ghostBlockCluster = new BlockCluster(currentBlockCluster.Shape,true);
             myGame.playField.AddChild(ghostBlockCluster);
-            SetGhostBlockClusterPosition();
+            //SetGhostBlockClusterPosition();
         }
         private Shape GetRandomShape()//Get a random shape that isn't in the list of upcoming shapes.
         {
@@ -431,7 +452,6 @@ namespace GXPEngine.Tetris
                 {
                     savedBlockCluster = currentBlockCluster;
                         NextBlockCluster(true);
-                        Console.WriteLine("No saved blockcluster found, created a new one!");
                 }
                 else
                 {
@@ -443,7 +463,6 @@ namespace GXPEngine.Tetris
                     currentBlockCluster.SetScaleXY(1f,1f);
                     currentBlockCluster.SetXY(playFieldCenterX, playFieldCenterY);
                     savedBlockCluster = swapBlockCluster;
-                    Console.WriteLine("Saved blockcluster found, swapped them around!");
                 }
             myGame.AddChild(savedBlockCluster);
             savedBlockCluster.SetScaleXY(1.6f,1.6f);

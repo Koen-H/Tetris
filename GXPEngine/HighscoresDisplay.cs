@@ -65,22 +65,12 @@ namespace GXPEngine
 
                             switch (key)
                             {
-                                case "position":
-                                   /* if (numbers.Length == 2)
-                                    {
-                                        // These may trigger an exception if the string doesn't represent a float value:
-                                       // car.x = float.Parse(numbers[0]);
-                                        //car.y = float.Parse(numbers[1]);
-                                        Console.WriteLine("Car has position {0},{1}", car.x, car.y);
-                                    }*/
-                                    break;
+
                                 case "score":
                                     if (numbers.Length == 1)
                                     {
                                         // This may trigger an exception if the string doesn't represent a float value:
                                         savedScore = int.Parse(numbers[0]);
-                                        //Console.WriteLine("Car has rotation {0}", car.rotation);
-                                        Console.WriteLine("This happens!" + savedScore);
                                     }
                                     break;
                             }
