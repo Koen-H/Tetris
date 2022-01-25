@@ -57,31 +57,24 @@ namespace GXPEngine.Tetris
             switch (_shape)
             {
                 case Shape.T:
-                    Console.WriteLine("Constructing T");
                     ConstructTShape();
                     break;
                 case Shape.I:
-                    Console.WriteLine("Constructing I");
                     ConstructRotatedIShape();
                     break;
                 case Shape.Square:
-                    Console.WriteLine("Constructing Square");
                     ConstructSquareShape();
                     break;
                 case Shape.J:
-                    Console.WriteLine("Constructing J");
                     ConstructJShape();
                     break;
                 case Shape.L:
-                    Console.WriteLine("Constructing L");
                     ConstructLShape();
                     break;
                 case Shape.Z:
-                    Console.WriteLine("Constructing Z");
                     ConstructZShape();
                     break;
                 case Shape.S:
-                    Console.WriteLine("Constructing S");
                     ConstructSShape();
                     break;     
             }
@@ -93,7 +86,7 @@ namespace GXPEngine.Tetris
                 }
             }
         }
-
+        //These are pretty much prefab constructers, can be replaced with tiled if I've got the time to do so.
         private void ConstructTShape()
         {
             //create the visual block
@@ -488,7 +481,9 @@ namespace GXPEngine.Tetris
                 if (!isGhostBlock)
                 {
                     SetBlock();
+
                     new Sound("snap.wav").Play();
+                    myGame.gameManager.NextBlockCluster();
                 }
             }
             else
@@ -610,7 +605,7 @@ namespace GXPEngine.Tetris
             {
                 block.SetOccupied();
             }
-            myGame.gameManager.NextBlockCluster();
+            
         }
 
         private Boolean RotationCheck()//TODO: Ask teacher how to optimize this, he said it was fine.

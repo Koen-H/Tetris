@@ -9,11 +9,11 @@ namespace GXPEngine.Tetris
 
     public class GameManager 
     {
-       
+
         private MyGame myGame;
-        public float dropInterval = 1000f;//the time (in miliseconds) it will take to automatically drop one 
+        public float dropInterval = 750f;//the time (in miliseconds) it will take to automatically drop one 
         private float minDropInterval = 100f;//the dropSpeed shouldn't be lower than this
-        public float difficulty = 3;//will be used to make dropSpeed faster as the player goes on, ( By how much should dropinterval be decreased?)
+        public float difficulty = 5;//will be used to make dropSpeed faster as the player goes on, ( By how much should dropinterval be decreased?)
         public float lastDrop;
         private Boolean gameOver;
 
@@ -109,6 +109,7 @@ namespace GXPEngine.Tetris
                         //Note, move the current block cluster to the ghost cluster and then set the curren cluster, as the block cluster has incorrect alpha.
                         currentBlockCluster.SetXY(ghostBlockCluster.x, ghostBlockCluster.y); //Disabled, as it breaks the game right now
                         currentBlockCluster.SetBlock();
+                        NextBlockCluster();
                         scoreDisplay.ApplyPoints(hardDropScore);
                         new Sound("hard_drop.wav").Play();
                     }
@@ -144,7 +145,7 @@ namespace GXPEngine.Tetris
                         SetGhostBlockClusterPosition();
 
                     }
-                    if (Input.GetKeyDown(Key.Q))
+                    if (Input.GetKeyDown(Key.Q))//Rotate the blockcluster, and the ghostblock cluster
                     {
                         currentBlockCluster.RotateLeft();
                         SetGhostBlockClusterRotation(true);
@@ -184,9 +185,19 @@ namespace GXPEngine.Tetris
             {
                 dropInterval = minDropInterval;
             }
+            if (dropInterval == 400)
+            {
+                new Sound("speed_up_one.wav").Play();
+                myGame.PlayBackgroundMusic("playing_game_fast.wav");
+            }
+            else if (dropInterval == minDropInterval + difficulty)//play other song
+            {
+                new Sound("speed_up_two.wav").Play();
+                myGame.PlayBackgroundMusic("super_fast_music.wav");// play the other other song, which is even faster!
+            }
             Console.WriteLine("Difficulty is now: " + dropInterval);
         }
-       /* public void CreatePlayField(Pivot playField)//This code was used to generate a playfield, this has now been replaced with tiled.
+       /* public void CreatePlayField(Pivot playField)//This code was used to generate a playfield, this has now been replaced with tiled. Keeping it as backup for now
         {
             Console.WriteLine("CreatingPlayField");
             playField.SetXY(playFieldCoordinateX, playFieldCoordinateY);
@@ -353,14 +364,13 @@ namespace GXPEngine.Tetris
         }
         public void StartTetris()//Set the playfield ready to go!
         {
-            
+            dropInterval = 750f;
             upcomingShapes = new List<Shape>();
             upcomingBlockCluster = new BlockCluster(GetRandomShape());
             upcomingBlockCluster2 = new BlockCluster(GetRandomShape());
             upcomingBlockCluster3 = new BlockCluster(GetRandomShape());
             myGame.AddChild(upcomingBlockCluster2);
             myGame.AddChild(upcomingBlockCluster3);
-            //TODO: FIx why it doesn't appear in the first update.
             NextBlockCluster();
             playingTetris = true;
             myGame.PlayBackgroundMusic("playing_game.wav");
@@ -397,7 +407,6 @@ namespace GXPEngine.Tetris
             upcomingBlockCluster3.SetScaleXY(1.2f, 1.2f);
             myGame.AddChild(upcomingBlockCluster3);
             CreateGhostBlockCluster();
-            SetGhostBlockClusterPosition();
             savedBlockClusterCooldown = false;
             CheckForGameOver();
         }
@@ -428,7 +437,7 @@ namespace GXPEngine.Tetris
             }
             ghostBlockCluster = new BlockCluster(currentBlockCluster.Shape,true);
             myGame.playField.AddChild(ghostBlockCluster);
-            //SetGhostBlockClusterPosition();
+            SetGhostBlockClusterPosition();
         }
         private Shape GetRandomShape()//Get a random shape that isn't in the list of upcoming shapes.
         {
@@ -468,6 +477,7 @@ namespace GXPEngine.Tetris
             savedBlockCluster.SetScaleXY(1.6f,1.6f);
             savedBlockCluster.SetXY(saveCoordinateX, saveCoordinateY);
             savedBlockClusterCooldown = true;
+            CreateGhostBlockCluster();
         }
 
         private void CheckForGameOver()//Check if there is a game over.
@@ -477,6 +487,7 @@ namespace GXPEngine.Tetris
             if (gameOver)// Do the game over sequence.
             {
                 Console.WriteLine("Game over!");
+                currentBlockCluster.SetBlock();
                 currentBlockCluster.Destroy();
                 new Sound("me_game_gameover.wav").Play();
                 myGame.PlayBackgroundMusic("game_over_background_music.wav");

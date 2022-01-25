@@ -6,7 +6,7 @@ using System.Text;
 
 namespace GXPEngine.Tetris
 {
-    //TODO, Make this extend with Block.cs
+    //TODO, This has a lot of similairity with Block.cs Maybe merge them together? Or atleast extend?
     public class CollisionBlock : Sprite //this is one block, a BlockCluster is the shape.
     {
         MyGame myGame;

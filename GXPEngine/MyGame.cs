@@ -16,21 +16,27 @@ public class MyGame : Game
     Boolean disableMusic;
 
 
-   /* CONTROLS:
-    *  A = LEFT 
-    *  D = RIGHT
-    *  Q = ROTATE LEFT
-    *  E = ROTATE RIGHT
-    *  W = HARD DROP
-    *  S = SOFT DROP
-    *  F = SAVE BLOCK
-    *  SPACE = SAVE BLOCK
-    *  M = MUTE AUDIO
-    *  
-    *  F1 = Diagnostics in console
-    * 
-    * 
-    * */
+    /* CONTROLS:
+     *  A = LEFT 
+     *  D = RIGHT
+     *  Q = ROTATE LEFT
+     *  E = ROTATE RIGHT
+     *  W = HARD DROP
+     *  S = SOFT DROP
+     *  F = SAVE BLOCK
+     *  SPACE = SAVE BLOCK
+     *  M = MUTE AUDIO
+     *  
+     *  F1 = Diagnostics in console
+     * 
+     * 
+     * TODO: 
+     * - Make the game look good.
+     * - Fix rotation in ghostblock after save-swap 
+     * - be able to have multiple scores
+     * - add some kind of name to the score
+     * 
+     * */
 
 
     static void Main()                          // Main() is the first method that's called when the program is run
@@ -61,7 +67,7 @@ public class MyGame : Game
         DestroyAll();
         Level level = new Level(loadLevel);
         currentLevel = loadLevel;
-        Scene UI = new Scene("scene_level.tmx");// this is the ui
+        Scene UI = new Scene("scene_level.tmx");// this is the "ui" for a level.
         LoadScene(UI);// load the UI
         LoadScene(level);// load the level
         gameManager.StartTetris();

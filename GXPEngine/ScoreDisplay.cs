@@ -37,7 +37,7 @@ namespace GXPEngine
             canvas.Clear(0);
             canvas.Text(scoreToSet.ToString());
         }
-        public void TetrisPoints(int _linesOfTetris)
+        public void TetrisPoints(int _linesOfTetris)//In a future build, this method will also keep track of tetris streaks for even more points.
         {
             switch (_linesOfTetris)
             {

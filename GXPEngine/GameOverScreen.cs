@@ -11,7 +11,7 @@ namespace GXPEngine
     {
         private MyGame myGame;
         int finalScore;
-        EasyDraw restartButton, saveButton, quitButton;
+        EasyDraw restartButton, saveButton, quitButton, mainMenuButton;
         Boolean saved;
         public GameOverScreen()
         {
@@ -20,13 +20,13 @@ namespace GXPEngine
             
             EasyDraw backgroundCanvas = new EasyDraw(700,400);
             this.SetXY(game.width/2, game.height/2);
-            backgroundCanvas.Clear(100,100,100);//background color
+            backgroundCanvas.Clear(100,100,100, 200);//background color
 
             backgroundCanvas.SetXY(-(backgroundCanvas.width / 2), -(backgroundCanvas.height / 2));
             backgroundCanvas.SetScaleXY(1.3f,1.3f);
 
             EasyDraw topCanvas = new EasyDraw(700,100);
-            topCanvas.Clear(0,255,255);
+            topCanvas.Clear(0,255,255, 200);
             topCanvas.Fill(255,0,0);
             topCanvas.TextAlign(CenterMode.Center, CenterMode.Center);
             topCanvas.ShapeAlign(CenterMode.Center,CenterMode.Center);
@@ -35,7 +35,7 @@ namespace GXPEngine
             backgroundCanvas.AddChild(topCanvas);
 
             restartButton = new EasyDraw(200,90);
-            restartButton.Clear(0, 255, 25);
+            restartButton.Clear(0, 255, 25, 220);
             restartButton.Fill(255, 255, 0);
             restartButton.TextAlign(CenterMode.Center, CenterMode.Center);
             restartButton.ShapeAlign(CenterMode.Center, CenterMode.Center);
@@ -47,7 +47,7 @@ namespace GXPEngine
 
             saveButton = new EasyDraw(200, 90);
             saveButton.Clear(0, 255, 25);
-            saveButton.Fill(255, 255, 0);
+            saveButton.Fill(255, 255, 0, 220);
             saveButton.TextAlign(CenterMode.Center, CenterMode.Center);
             saveButton.ShapeAlign(CenterMode.Center, CenterMode.Center);
             saveButton.TextSize(25);
@@ -57,13 +57,23 @@ namespace GXPEngine
 
             quitButton = new EasyDraw(200, 90);
             quitButton.Clear(0, 255, 25);
-            quitButton.Fill(255, 0, 0);
+            quitButton.Fill(255, 0, 0, 220);
             quitButton.TextAlign(CenterMode.Center, CenterMode.Center);
             quitButton.ShapeAlign(CenterMode.Center, CenterMode.Center);
             quitButton.TextSize(25);
             quitButton.Text("Quit game");
             quitButton.SetXY(480, 275);
             backgroundCanvas.AddChild(quitButton);
+
+            mainMenuButton = new EasyDraw(200, 90);
+            mainMenuButton.Clear(0, 255, 25);
+            mainMenuButton.Fill(255, 0, 0, 220);
+            mainMenuButton.TextAlign(CenterMode.Center, CenterMode.Center);
+            mainMenuButton.ShapeAlign(CenterMode.Center, CenterMode.Center);
+            mainMenuButton.TextSize(25);
+            mainMenuButton.Text("Main Menu");
+            mainMenuButton.SetXY(480, 375);
+            backgroundCanvas.AddChild(mainMenuButton);
 
             AddChild(backgroundCanvas);
             /*
@@ -95,6 +105,11 @@ namespace GXPEngine
                 {
                     Console.WriteLine("Quitting the game...");
                     game.Destroy();
+                }
+                else if (mainMenuButton.HitTestPoint(Input.mouseX, Input.mouseY))
+                {
+                    Console.WriteLine("Going to main menu...");
+                    myGame.LoadMainMenu();
                 }
             }
         }
