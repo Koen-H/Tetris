@@ -17,7 +17,6 @@ namespace GXPEngine
             // Set the position of the button to the bottom middle of the screen:
 
             SetXY(coloms, rows);
-            Console.WriteLine("A button has been created!");
         }
 
         public void Update()

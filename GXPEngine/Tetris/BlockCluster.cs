@@ -21,13 +21,15 @@ namespace GXPEngine.Tetris
         private MyGame myGame;
         Shape shape;// the type, aka the shape
         private List<CollisionBlock> blocks = new List<CollisionBlock>();//list with blocks, aka the shape
-        private List<CollisionBlock> colliderBlocks, colliderBlocksBottom, colliderBlocksLeft, colliderBlocksRight, colliderBlocksTop;//list with colliderBlocks, aka the "raycast"
+        public List<CollisionBlock> colliderBlocks, colliderBlocksBottom, colliderBlocksLeft, colliderBlocksRight, colliderBlocksTop;//list with colliderBlocks, aka the "raycast"
         private List<CollisionBlock> colliderBlocksRotation = new List<CollisionBlock>();//list with colliderBlocks used for Rotating the block;
         private Boolean rotatedUpwards = false;// Based on the real game, if the rotate can't place it correctly, it will Move it up. but this only happens once! After that it doesn't rotate
         private float blockSize;
+        Boolean isGhostBlock;
 
-        public BlockCluster(Shape shape)
+        public BlockCluster(Shape _shape, Boolean _isGhostBlock = false)
         {
+            isGhostBlock = _isGhostBlock;
             myGame = (MyGame)game;
             blockSize = myGame.gameManager.blockSize;
             colliderBlocks = new List<CollisionBlock>();
@@ -35,8 +37,7 @@ namespace GXPEngine.Tetris
             colliderBlocksLeft = new List<CollisionBlock>();
             colliderBlocksRight = new List<CollisionBlock>();
             colliderBlocksTop = new List<CollisionBlock>();
-            this.shape = shape;
-            createShape(shape);
+            CreateShape(_shape);
         }
         public Shape Shape{
             get{
@@ -47,7 +48,7 @@ namespace GXPEngine.Tetris
             }
         }
 
-        public void createShape(Shape _shape)//Trigger the correct method
+        public void CreateShape(Shape _shape)//Trigger the correct method
         {
 
             Shape = _shape;
@@ -475,13 +476,12 @@ namespace GXPEngine.Tetris
                 new Sound(sound).Play();
             }
             if (IsColliding(colliderBlocksBottom))
-            {   
-                foreach (CollisionBlock block in blocks)
+            {
+                if (!isGhostBlock)
                 {
-                    block.SetOccupied();
+                    SetBlock();
+                    new Sound("snap.wav").Play();
                 }
-                myGame.gameManager.NextBlockCluster();
-                new Sound("snap.wav").Play();
             }
             else
             {
@@ -495,6 +495,7 @@ namespace GXPEngine.Tetris
             this.y -= blockSize;
 
         }
+
         public void MoveLeft(string sound = null)//Move the block left by one grid
         {
             
@@ -553,6 +554,10 @@ namespace GXPEngine.Tetris
                 colliderBlocksTop = colliderBlocksLeft;//list with colliderBlocks at the top side;
                 colliderBlocksLeft = colliderBlocksRotation;//list with colliderBlocks at the Left side;
             }
+            else
+            {
+                new Sound("rotate.wav").Play();
+            }
         }
         public void RotateRight()
         {
@@ -585,9 +590,22 @@ namespace GXPEngine.Tetris
                 colliderBlocksBottom = colliderBlocksLeft;//list with colliderBlocks at the Bottom side;
                 colliderBlocksLeft = colliderBlocksRotation;//list with colliderBlocks at the Left side;
             }
+            else
+            {
+                new Sound("rotate.wav").Play();
+            }
         }
 
-        private Boolean RotationCheck()//TODO: Ask teacher how to optimize this
+        public void SetBlock()
+        {
+            foreach (CollisionBlock block in blocks)
+            {
+                block.SetOccupied();
+            }
+            myGame.gameManager.NextBlockCluster();
+        }
+
+        private Boolean RotationCheck()//TODO: Ask teacher how to optimize this, he said it was fine.
         {
             Boolean resetToOriginal = false;
             if (IsCollidingWithWall(true) ){// if it's inside the wall on the left
@@ -749,7 +767,7 @@ namespace GXPEngine.Tetris
             return resetToOriginal;
         }
 
-        private Boolean IsColliding(List<CollisionBlock> colliderBlocksList)
+        public Boolean IsColliding(List<CollisionBlock> colliderBlocksList)
         {
             foreach (CollisionBlock block in colliderBlocksList)
             {

@@ -7,37 +7,38 @@ using System.Text;
 namespace GXPEngine.Tetris
 {
 
-    public class GameManager  // OPTIMIZE, Make this non-static
+    public class GameManager 
     {
-        //  public static int score;//player's score
-        private MyGame game;
-        public static float dropInterval = 1000f;//the time (in miliseconds) it will take to automatically drop one 
-        private static float minDropInterval = 100f;//the dropSpeed shouldn't be lower than this
-        public static float difficulty = 3;//will be used to make dropSpeed faster as the player goes on, ( By how much should dropinterval be decreased?)
-        public static float lastDrop;
-        private static Boolean gameOver;
+       
+        private MyGame myGame;
+        public float dropInterval = 1000f;//the time (in miliseconds) it will take to automatically drop one 
+        private float minDropInterval = 100f;//the dropSpeed shouldn't be lower than this
+        public float difficulty = 3;//will be used to make dropSpeed faster as the player goes on, ( By how much should dropinterval be decreased?)
+        public float lastDrop;
+        private Boolean gameOver;
 
-        private static float moveInterval = 75f;
-        private static float lastMove;
+        private float moveInterval = 75f;
+        private float lastMove;
 
         public float blockSize = 25;//The size of the blocks (For now sprite)
-        public static float playFieldCoordinateX = 60;
-        public static float playFieldCoordinateY = 60;
-        public static int playFieldHeight = 20;//The height of the canvas, default: 20
-        public static int playFieldWidth = 10;//The width of the canvas, default: 10
-        public static float playFieldCenterX; //The center, where the blocks will spawn
-        public static float playFieldCenterY;//Using tiled, this is no longer the center. More like a starting position. Could be renamed!
-        public static Block[,] grid; //first x, then y
+        public float playFieldCoordinateX = 60;
+        public float playFieldCoordinateY = 60;
+        public int playFieldHeight = 20;//The height of the canvas, default: 20
+        public int playFieldWidth = 10;//The width of the canvas, default: 10
+        public float playFieldCenterX; //The center, where the blocks will spawn
+        public float playFieldCenterY;//Using tiled, this is no longer the center. More like a starting position. Could be renamed!
+        public Block[,] grid; //first x, then y
         public Boolean playingTetris = false;
 
-        public static ScoreDisplay scoreDisplay;
+        public ScoreDisplay scoreDisplay;
 
         private BlockCluster savedBlockCluster;
         public float saveCoordinateX;
         public float saveCoordinateY;
         private bool savedBlockClusterCooldown;
+        BlockCluster ghostBlockCluster; // This cluster is used to determine and identify the place of the "snap" function.
 
-        static List<Shape> upcomingShapes;
+        List<Shape> upcomingShapes;
         public BlockCluster upcomingBlockCluster;
         public float upcomingBlockClusterX;
         public float upcomingBlockClusterY;
@@ -48,19 +49,19 @@ namespace GXPEngine.Tetris
         public float upcomingBlockClusterX3;
         public float upcomingBlockClusterY3;
 
-        public static BlockCluster currentBlockCluster;
+        public BlockCluster currentBlockCluster;
 
         //To kill the Grid if gameOver is true
         private int yKillGrid;
         private float gridKillerInterval = 350f;
         private float lastGridKilled;
 
-        public GameManager(MyGame _game)
+        public GameManager(MyGame _myGame)
         {
-            game = _game;
+            myGame = _myGame;
         }
 
-        public void SetupPlayField(int _playFieldHeight, int _playFieldWidth, float _playFieldCenterX, float _playFieldCenterY, Block[,] _grid)
+        public void SetupPlayField(int _playFieldHeight, int _playFieldWidth, float _playFieldCenterX, float _playFieldCenterY, Block[,] _grid)//This function sets the playfield for everything ready to go
         {
             yKillGrid = 0;
             playFieldHeight = _playFieldHeight;
@@ -102,6 +103,9 @@ namespace GXPEngine.Tetris
                     if (Input.GetKeyDown(Key.W))//Goes up for now, 
                     {
                         currentBlockCluster.MoveUp();
+                       /* currentBlockCluster.SetXY(ghostBlockCluster.x, ghostBlockCluster.y); 
+                        currentBlockCluster.SetBlock();
+                        new Sound("hard_drop.wav").Play();*/
                     }
                     if (Input.GetKey(Key.A) && Time.time > lastMove + moveInterval)
                     {
@@ -151,7 +155,7 @@ namespace GXPEngine.Tetris
             }
             
         }
-        private void DestroyGrid()
+        private void DestroyGrid()//Destroys the grid, It's a "animation" when the game is over.
         {
             int x = 0;
             while (x < playFieldWidth)
@@ -164,7 +168,7 @@ namespace GXPEngine.Tetris
             }
                 ++yKillGrid;
         }
-        private void IncreaseDifficulty()
+        private void IncreaseDifficulty()// Increases the difficulty
         {
             dropInterval -= difficulty;
             if (dropInterval < minDropInterval)
@@ -173,7 +177,7 @@ namespace GXPEngine.Tetris
             }
             Console.WriteLine("Difficulty is now: " + dropInterval);
         }
-       /* public static void CreatePlayField(Pivot playField)//no longer in use, replaced with tiled! Keeping code for backup
+       /* public void CreatePlayField(Pivot playField)//This code was used to generate a playfield, this has now been replaced with tiled.
         {
             Console.WriteLine("CreatingPlayField");
             playField.SetXY(playFieldCoordinateX, playFieldCoordinateY);
@@ -222,11 +226,12 @@ namespace GXPEngine.Tetris
             }
         }
         */
+
         public void CheckForTetris(Boolean firstCheck)//check if there is a row filled.
         {
             //if firstCheck is true, it will award points
 
-            Pivot playField = game.playField;
+            Pivot playField = myGame.playField;
             int y = 0;
             List<int> tetrisLines = new List<int>();
             while (y < (playFieldHeight -1)) { //loop through each Y line and check if there is a full line! -1 to not include the floor!
@@ -285,7 +290,7 @@ namespace GXPEngine.Tetris
                 
             }
         }
-        private void ClearTetrisLine(int tetrisLine)//remove tetris lines from the field, then drop the blocks accordingly
+        private void ClearTetrisLine(int tetrisLine)//remove the tetris lines from the field, then drop the blocks accordingly
         {
             //int linesOfTetris = tetrisLines.Count();
 
@@ -303,7 +308,7 @@ namespace GXPEngine.Tetris
                         grid[x, y].Destroy();
                         grid[x, y] = GetBlock(x,y-1);
                         grid[x, y].SetXY(x* blockSize,y*blockSize);
-                        game.playField.AddChild(grid[x, y]);
+                        myGame.playField.AddChild(grid[x, y]);
                         }
                         else if(grid[x, y].blockType == BlockType.GrayBlock){
                             ignoreX.Add(x);
@@ -344,12 +349,10 @@ namespace GXPEngine.Tetris
             upcomingBlockCluster = new BlockCluster(GetRandomShape());
             upcomingBlockCluster2 = new BlockCluster(GetRandomShape());
             upcomingBlockCluster3 = new BlockCluster(GetRandomShape());
-            game.AddChild(upcomingBlockCluster2);
-            game.AddChild(upcomingBlockCluster3);
+            //TODO: FIx why it doesn't appear in the first update.
             NextBlockCluster();
             playingTetris = true;
-
-
+            myGame.PlayBackgroundMusic("playing_game.wav");
         }
         public void QuitTetris()
         {
@@ -357,7 +360,7 @@ namespace GXPEngine.Tetris
         }
         public void NextBlockCluster(Boolean isSave = false)
         {
-            IncreaseDifficulty();
+            IncreaseDifficulty();// A new block means a new, higher drop speed!
             if (currentBlockCluster != null)
             {
                 upcomingShapes.Remove(currentBlockCluster.Shape);
@@ -372,21 +375,41 @@ namespace GXPEngine.Tetris
             upcomingBlockCluster = upcomingBlockCluster2;
             upcomingBlockCluster2 = upcomingBlockCluster3;
             upcomingBlockCluster3 = new BlockCluster(GetRandomShape());
-            game.playField.AddChild(currentBlockCluster);
+            myGame.playField.AddChild(currentBlockCluster);
             currentBlockCluster.SetXY(playFieldCenterX, playFieldCenterY);
             currentBlockCluster.SetScaleXY(1f,1f);//Change the blockcluster back to the size of the playfield
             upcomingBlockCluster.SetXY(upcomingBlockClusterX,upcomingBlockClusterY);
             upcomingBlockCluster.SetScaleXY(1.6f,1.6f);// make the first upcoming block bigger to indicate it's the next one.
-            upcomingBlockCluster2.SetXY(upcomingBlockClusterX, upcomingBlockClusterY + (blockSize * 8));
-            upcomingBlockCluster3.SetXY(upcomingBlockClusterX, upcomingBlockClusterY + (blockSize * 14));
-            upcomingBlockCluster.SetScaleXY(1.2f, 1.2f);
-            upcomingBlockCluster.SetScaleXY(1.2f, 1.2f);
-            game.AddChild(upcomingBlockCluster3);
+            upcomingBlockCluster2.SetXY(upcomingBlockClusterX, upcomingBlockClusterY + (blockSize * 6));
+            upcomingBlockCluster3.SetXY(upcomingBlockClusterX, upcomingBlockClusterY + (blockSize * 10));
+            upcomingBlockCluster2.SetScaleXY(1.2f, 1.2f);
+            upcomingBlockCluster3.SetScaleXY(1.2f, 1.2f);
+            myGame.AddChild(upcomingBlockCluster3);
+            SetGhostBlockCluster();
             savedBlockClusterCooldown = false;
             CheckForGameOver();
         }
-
-        private Shape GetRandomShape()
+        private void SetGhostBlockClusterPosition()//set the coordinates of the ghostblockcluster
+        {
+            ghostBlockCluster.SetXY(currentBlockCluster.x, currentBlockCluster.y);
+            Console.WriteLine("Setting Ghost Block Cluster");
+            ghostBlockCluster.y += blockSize*18;
+            /*while (ghostBlockCluster.IsColliding(ghostBlockCluster.colliderBlocksBottom)) //ASK WIEBE THE HERO
+            {
+                ghostBlockCluster.y += blockSize; ;
+            }*/
+        }
+        private void SetGhostBlockCluster()//set the ghostblockcluster, used in nextBlockCluster().
+        {
+            if (ghostBlockCluster != null)
+            {
+                ghostBlockCluster.Destroy();
+            }
+            ghostBlockCluster = new BlockCluster(currentBlockCluster.Shape,true);
+            myGame.playField.AddChild(ghostBlockCluster);
+            SetGhostBlockClusterPosition();
+        }
+        private Shape GetRandomShape()//Get a random shape that isn't in the list of upcoming shapes.
         {
             Array values = Enum.GetValues(typeof(Shape));
             Shape randomShape;
@@ -401,7 +424,7 @@ namespace GXPEngine.Tetris
             return randomShape;
         }
 
-        public void SaveBlockCluster()
+        public void SaveBlockCluster()// Save the current block cluster to the save slot
         {
             if(!savedBlockClusterCooldown)
                 if (savedBlockCluster == null)
@@ -416,30 +439,34 @@ namespace GXPEngine.Tetris
                     BlockCluster swapBlockCluster;
                     swapBlockCluster = currentBlockCluster;
                     currentBlockCluster = savedBlockCluster;
-                    game.playField.AddChild(currentBlockCluster);
+                    myGame.playField.AddChild(currentBlockCluster);
                     currentBlockCluster.SetScaleXY(1f,1f);
                     currentBlockCluster.SetXY(playFieldCenterX, playFieldCenterY);
                     savedBlockCluster = swapBlockCluster;
                     Console.WriteLine("Saved blockcluster found, swapped them around!");
                 }
-            game.AddChild(savedBlockCluster);
+            myGame.AddChild(savedBlockCluster);
             savedBlockCluster.SetScaleXY(1.6f,1.6f);
             savedBlockCluster.SetXY(saveCoordinateX, saveCoordinateY);
             savedBlockClusterCooldown = true;
         }
 
-        private void CheckForGameOver()
+        private void CheckForGameOver()//Check if there is a game over.
         {
             gameOver = currentBlockCluster.CheckForGameOver();
             
-            if (gameOver)
+            if (gameOver)// Do the game over sequence.
             {
                 Console.WriteLine("Game over!");
                 currentBlockCluster.Destroy();
-                new Sound("me_game_gameover.wav").Play(); 
+                new Sound("me_game_gameover.wav").Play();
+                myGame.PlayBackgroundMusic("game_over_background_music.wav");
+                GameOverScreen gameOverScreen = new GameOverScreen();//open the game over pop-up (or screen if it's improved)
+                myGame.AddChild(gameOverScreen);
             }
         }
 
+        //To set coordinates correctly, via level.cs
         public void SetUpcomingCoordinates(float _upcomingBlockClusterX, float _upcomingBlockClusterY)
         {
             upcomingBlockClusterX = _upcomingBlockClusterX;
@@ -460,7 +487,7 @@ namespace GXPEngine.Tetris
         {
             playFieldCoordinateX = _playFieldCoordinateX;
             playFieldCoordinateY = _playFieldCoordinateY;
-            game.playField.SetXY(playFieldCoordinateX,playFieldCoordinateY);
+            myGame.playField.SetXY(playFieldCoordinateX,playFieldCoordinateY);
         }
     }
 }

@@ -8,8 +8,7 @@ namespace GXPEngine
 {
     public class ScoreDisplay : GameObject
     {
-        int score;
-        float tetrisStreak;
+        public int score;
         EasyDraw canvas;
 
         public ScoreDisplay()
@@ -27,14 +26,17 @@ namespace GXPEngine
             this.AddChild(canvas);
         }
 
-        public void ApplyPoints(int _score)// and update score
+        public void ApplyPoints(int points)// and update score
         {
-            score += _score;
-            canvas.Clear(0);
-            canvas.Text(score.ToString());
-            Console.WriteLine("New score: " + score);
+            score += points;
+            SetScore(score);
+            //Console.WriteLine("New score: " + score);
         }
-
+        public void SetScore(int scoreToSet)//Set a score to display
+        {
+            canvas.Clear(0);
+            canvas.Text(scoreToSet.ToString());
+        }
         public void TetrisPoints(int _linesOfTetris)
         {
             switch (_linesOfTetris)

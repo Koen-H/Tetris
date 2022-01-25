@@ -68,7 +68,10 @@ namespace GXPEngine
                                     break;
                                 case 10://Exit Coordinate button
                                     
-                                     Button exitButton = new Button("exit_button.png", tiles.Columns, tiles.Rows, "main_menu.tmx");
+                                     Button exitButton = new Button("exit_button.png", 1, 1, "main_menu.tmx");
+                                    exitButton.SetFrame(1);
+                                    exitButton.SetXY(col * tile.width, row * tile.height);
+                                    exitButton.SetScaleXY(0.8f,0.8f);
                                     AddChild(exitButton);
                                     break;
                                 case 11://Upcoming Coordinate
@@ -82,10 +85,15 @@ namespace GXPEngine
                                 case 13://Score coordinate
                                     tile = new SceneObject(tiles.Image.FileName, tiles.Columns, tiles.Rows);
                                     myGame.gameManager.SetScoreDisplayCoordinates(col * tile.width, row * tile.height);
-                                    GameManager.scoreDisplay = new ScoreDisplay();
-                                    GameManager.scoreDisplay.SetXY(col * tile.width, row * tile.height);
-                                    AddChild(GameManager.scoreDisplay);
+                                    myGame.gameManager.scoreDisplay = new ScoreDisplay();
+                                    myGame.gameManager.scoreDisplay.SetXY(col * tile.width, row * tile.height);
+                                    AddChild(myGame.gameManager.scoreDisplay);
                                     // GameManager.scoreDisplay.SetXY(col, row);
+                                    break;
+                                case 14:// HighScore coordinate
+                                    HighscoresDisplay highscoreDisplay = new HighscoresDisplay(myGame.currentLevel);
+                                    highscoreDisplay.SetXY(col * tile.width, row * tile.height);
+                                    AddChild(highscoreDisplay);
                                     break;
                                 default://Scene Objects, that are decoration
                                      tile = new SceneObject(tiles.Image.FileName, tiles.Columns, tiles.Rows);
