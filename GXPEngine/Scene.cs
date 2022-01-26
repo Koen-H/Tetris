@@ -13,8 +13,8 @@ namespace GXPEngine
     {
         private MyGame myGame;
 
-        private string levelToLoad;
-        private Sprite background;
+        readonly private string levelToLoad;
+        readonly private Sprite background;
 
         public Scene(string map)
         {
@@ -46,7 +46,7 @@ namespace GXPEngine
                     TileSet tiles = mapData.GetTileSet(tileNumber);
                     if (tileNumber > 0)
                     {
-                        if (levelToLoad == "main_menu.tmx") {//for the main menu
+                        if (levelToLoad == "scene_main_menu.tmx") {//for the main menu
                             int levelNumber = tileNumber;
                             if (tileNumber > 5)
                             {
@@ -68,7 +68,7 @@ namespace GXPEngine
                                     break;
                                 case 10://Exit Coordinate button
                                     
-                                     Button exitButton = new Button("exit_button.png", 1, 1, "main_menu.tmx");
+                                     Button exitButton = new Button("exit_button.png", 1, 1, "scene_main_menu.tmx");
                                     exitButton.SetFrame(1);
                                     exitButton.SetXY(col * tile.width, row * tile.height);
                                     exitButton.SetScaleXY(0.8f,0.8f);
@@ -93,6 +93,7 @@ namespace GXPEngine
                                 case 14:// HighScore coordinate
                                     HighscoresDisplay highscoreDisplay = new HighscoresDisplay(myGame.currentLevel);
                                     highscoreDisplay.SetXY(col * tile.width, row * tile.height);
+                                    myGame.highscoreDisplay = highscoreDisplay;
                                     AddChild(highscoreDisplay);
                                     break;
                                 default://Scene Objects, that are decoration

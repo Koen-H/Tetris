@@ -88,6 +88,5 @@
     <Compile Include="Tetris\BlockCluster.cs" />
     <Compile Include="Tetris\CollisionBlock.cs" />
     <Compile Include="Tetris\GameManager.cs" />
-    <Compile Include="Tetris\TempBlock.cs" />
   </ItemGroup>
 </Project>

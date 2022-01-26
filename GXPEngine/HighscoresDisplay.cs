@@ -9,19 +9,21 @@ namespace GXPEngine
 {
     public class HighscoresDisplay : GameObject
     {
-        int savedScore;
-        ScoreDisplay scoreDisplay;
+        private int savedScore;
+        private ScoreDisplay scoreDisplay;
+        readonly private string currentLevel;
         //TODO: make this nice and fancy display of highscores, for now, just the saved score with a easydraw.
 
-        public HighscoresDisplay(string currentLevel)
+        public HighscoresDisplay(string _currentLevel)
         {
+            currentLevel = _currentLevel;
             EasyDraw topCanvas = new EasyDraw(100, 25);
             topCanvas.Clear(0, 255, 255);
             topCanvas.Fill(255, 0, 0);
             topCanvas.TextAlign(CenterMode.Center, CenterMode.Center);
             topCanvas.ShapeAlign(CenterMode.Center, CenterMode.Center);
             topCanvas.TextSize(10);
-            topCanvas.Text("Saved Score");//TODO:Replace with High scores once implemented.
+            topCanvas.Text("Highest score");//TODO:Replace with High scores once implemented.
             topCanvas.SetScaleXY(2, 2);
             topCanvas.SetXY(-(topCanvas.width / 2), -(topCanvas.height)*2);
             scoreDisplay = new ScoreDisplay();
@@ -32,7 +34,7 @@ namespace GXPEngine
             Console.WriteLine(savedScore);
         }
 
-        void LoadData(string filename)//get the data from the document.
+        private void LoadData(string filename)//get the data from the document.
         {
             if (!File.Exists(filename))
             {
@@ -85,6 +87,40 @@ namespace GXPEngine
             catch (Exception error)
             {
                 Console.WriteLine("Error while reading save file: {0}", error.Message);
+            }
+        }
+
+        //Once gameover, check the highscore and update if it's higher.
+        public Boolean CheckAndSaveHighScore(int finalScore)
+        {
+            
+            if (savedScore < finalScore)
+            {
+                Console.WriteLine("New highscore detected! " + finalScore+ " Saving...");
+                SaveFinalScore(currentLevel + ".txt", finalScore);
+                return true;
+            }
+            return false;
+            
+        }            
+
+        private bool SaveFinalScore(string filename, int finalScore)
+        {
+            try
+            {
+                using (StreamWriter writer = new StreamWriter(filename))
+                {
+                    writer.WriteLine("score=" + finalScore);
+                    //name;
+                    writer.Close();
+                    Console.WriteLine("Score saved to file! " + filename);
+                    return true;
+                }
+            }
+            catch (Exception error)
+            {
+                Console.WriteLine("Error while trying to save: " + error.Message);
+                return false;
             }
         }
     }

@@ -7,13 +7,14 @@ using System.Collections.Generic;
 public class MyGame : Game
 {
     public Pivot playField = new Pivot();// this is where tetris plays,it drops down
-    //public Pivot uI = new Pivot();// This is the UI
-    private List<Button> buttonsList = new List<Button>();
-    public Scene mainMenu;
     public GameManager gameManager;
     public string currentLevel;
-    public SoundChannel backgroundSound;
-    Boolean disableMusic;
+    public HighscoresDisplay highscoreDisplay;
+    //public Pivot uI = new Pivot();// This is the UI
+    readonly private List<Button> buttonsList = new List<Button>();
+    private Scene mainMenu;
+    private SoundChannel backgroundSound;
+    private Boolean disableMusic;
 
 
     /* CONTROLS:
@@ -32,27 +33,26 @@ public class MyGame : Game
      * 
      * TODO: 
      * - Make the game look good.
-     * - Fix rotation in ghostblock after save-swap 
      * - be able to have multiple scores
      * - add some kind of name to the score
      * 
      * */
 
 
-    static void Main()                          // Main() is the first method that's called when the program is run
+    static void Main()// Main() is the first method that's called when the program is run
     {
         new MyGame().Start();
 
     }
 
-    public MyGame() : base(1920, 1080, false,true, 640, 360)		// Create a window that's 640 x 360, with a resolution of 1920 x 1080
+    public MyGame() : base(1920, 1080, false,true, 640, 360)// Create a window that's 640 x 360, with a resolution of 1920 x 1080
 	{
         backgroundSound = new SoundChannel(0);
         LoadMainMenu();
 
 
     }
-    public void LoadScene(GameObject scene)// used to load Scenes, and playfield levels
+    private void LoadScene(GameObject scene)// used to load Scenes, and playfield levels
     {
         Console.WriteLine("Loading scene: " + scene);
         //
@@ -76,7 +76,7 @@ public class MyGame : Game
     {
         gameManager = new GameManager(this);
         DestroyAll();
-        mainMenu = new Scene("main_menu.tmx");
+        mainMenu = new Scene("scene_main_menu.tmx");
         LoadScene(mainMenu);
         gameManager.QuitTetris();
         PlayBackgroundMusic("Main_Menu_Music.wav");
@@ -122,6 +122,7 @@ public class MyGame : Game
                 backgroundSound.Stop();
             }
             backgroundSound = new Sound(musicToPlay, true, true).Play();
+            backgroundSound.Volume = 0.4f;
         }
     }
 

@@ -8,7 +8,7 @@ namespace GXPEngine
 {
     public class Button : AnimationSprite
     {
-        string loadLevel;//Which level or scene should it load on click?
+        readonly private string loadLevel;//Which level or scene should it load on click?
 
         
         public Button(String blockColor, int coloms, int rows, string load) : base(blockColor, coloms, rows)

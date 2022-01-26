@@ -12,7 +12,7 @@ namespace GXPEngine
     {
         private MyGame myGame;
 
-        private string levelToLoad;
+        readonly private string levelToLoad;
         private Pivot playField;
 
         public Level(string map)

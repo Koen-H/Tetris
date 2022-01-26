@@ -6,38 +6,16 @@ using System.Text;
 
 namespace GXPEngine.Tetris
 {
-    //TODO, This has a lot of similairity with Block.cs Maybe merge them together? Or atleast extend?
-    public class CollisionBlock : Sprite //this is one block, a BlockCluster is the shape.
+
+    public class CollisionBlock : Block //this is one block, a BlockCluster is the shape.
     {
-        MyGame myGame;
 
-        // bool isCollisionCheckBlock;
-        protected String blockColor;
-        BlockType blockType;
-        float xParentPos, yParentPos, blockSize;
-       // GameObject colliding;
-
-
-
-        public CollisionBlock(float xParentPos, float yParentPos, String blockColor, BlockType blockType) : base(blockColor)
+        public CollisionBlock(float xParentPos, float yParentPos, String blockColor, BlockType blockType) : base(xParentPos, yParentPos, blockColor, blockType)
         {
-            myGame = (MyGame)game;
-            blockSize = myGame.gameManager.blockSize;
-            this.xParentPos = xParentPos;
-            this.yParentPos = yParentPos;
-            this.blockColor = blockColor;
-            this.blockType = blockType;
-            SetXY(blockSize * xParentPos, blockSize * yParentPos);
-            if (blockType == BlockType.CollisionBlock)
-            {
-                alpha = 0.0f;
-            }
+           
+
         }
 
-        private void SetSprite(String blockColor)
-        {
-            this.initializeFromTexture(Texture2D.GetInstance(blockColor, false));
-        }
 
         public Boolean IsColliding()//Used to check if the clusterblock/shape can Move a direction.
         {

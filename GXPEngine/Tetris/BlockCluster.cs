@@ -24,8 +24,8 @@ namespace GXPEngine.Tetris
         public List<CollisionBlock> colliderBlocks, colliderBlocksBottom, colliderBlocksLeft, colliderBlocksRight, colliderBlocksTop;//list with colliderBlocks, aka the "raycast"
         private List<CollisionBlock> colliderBlocksRotation = new List<CollisionBlock>();//list with colliderBlocks used for Rotating the block;
         private Boolean rotatedUpwards = false;// Based on the real game, if the rotate can't place it correctly, it will Move it up. but this only happens once! After that it doesn't rotate
-        private float blockSize;
-        Boolean isGhostBlock;
+        readonly private float blockSize;
+        readonly private Boolean isGhostBlock;
 
         public BlockCluster(Shape _shape, Boolean _isGhostBlock = false)
         {
@@ -559,7 +559,7 @@ namespace GXPEngine.Tetris
             }
             else
             {
-                new Sound("rotate.wav").Play();
+                if(!isGhostBlock)   new Sound("rotate.wav").Play();
             }
         }
         public void RotateRight()

@@ -15,28 +15,32 @@ namespace GXPEngine.Tetris
     {
         private MyGame myGame;
        // bool isCollisionCheckBlock;
-        public String blockSprite;
+        public String blockColor;
         public BlockType blockType;
-        float xParentPos, yParentPos, blockSize;
+        readonly float xParentPos, yParentPos, blockSize;
         
         
 
         public Block(float xParentPos, float yParentPos, String blockColor, BlockType blockType):base(blockColor)
         {
             myGame = (MyGame)game;
-            this.blockSize = myGame.gameManager.blockSize;
+            blockSize = myGame.gameManager.blockSize;
             this.xParentPos = xParentPos;
             this.yParentPos = yParentPos;
-            this.blockSprite = blockColor;
+            this.blockColor = blockColor;
             this.blockType = blockType;
-            this.SetXY(blockSize * xParentPos, blockSize * yParentPos);
+            SetXY(blockSize * xParentPos, blockSize * yParentPos);
+            if (blockType == BlockType.CollisionBlock)
+            {
+                alpha = 0.0f;
+            }
             
         }
 
 
-        public void SetSprite(String blockColor)
+        public void SetSprite(String _blockColor)
         {
-            blockSprite = blockColor;
+            blockColor = _blockColor;
             this.initializeFromTexture(Texture2D.GetInstance(blockColor, false));
         }
 
