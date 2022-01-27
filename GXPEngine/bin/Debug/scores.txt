@@ -1,0 +1,2 @@
+level=level0.tmx
+score=72
