@@ -29,7 +29,6 @@ namespace GXPEngine
         {
             Map mapData = MapParser.ReadMap(levelToLoad);
             SpawnTiles(mapData);
-            SpawnObjects(mapData);
         }
 
         public void SpawnTiles(Map mapData)
@@ -46,18 +45,7 @@ namespace GXPEngine
                     TileSet tiles = mapData.GetTileSet(tileNumber);
                     if (tileNumber > 0)
                     {
-                        /* if (levelToLoad == "scene_main_menu.tmx") //for the old menu
-                          {
-                             int levelNumber = tileNumber;
-                             if (tileNumber > 5)
-                             {
-                                 levelNumber = 0;
-                             }
-                             Button tile = new Button(tiles.Image.FileName, tiles.Columns, tiles.Rows, "level" + levelNumber + ".tmx");
-                             tile.SetFrame(tileNumber - tiles.FirstGId);
-                             tile.SetXY(col * tile.width, row * tile.height);
-                             AddChild(tile);
-                         }*/
+
                         if (levelToLoad == "scene_main_menu.tmx")
                         {//for the main menu
                             int levelNumber = -1;//This is one weird way to do it. But it i'll do the job...
@@ -164,9 +152,5 @@ namespace GXPEngine
             }
         }
 
-        public void SpawnObjects(Map mapData)
-        {
-
-        }
     }
 }

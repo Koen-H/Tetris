@@ -21,8 +21,8 @@ namespace GXPEngine.Tetris
         private float lastMove;
 
         public float blockSize = 25;//The size of the blocks (For now sprite)
-        public float playFieldCoordinateX = 60;
-        public float playFieldCoordinateY = 60;
+        private float playFieldCoordinateX = 60;
+        private float playFieldCoordinateY = 60;
         private int playFieldHeight = 20;//The height of the canvas, default: 20
         private int playFieldWidth = 10;//The width of the canvas, default: 10
         private float playFieldCenterX; //The center, where the blocks will spawn

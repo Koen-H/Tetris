@@ -26,7 +26,6 @@ namespace GXPEngine
         {
             Map mapData = MapParser.ReadMap(levelToLoad);
             SpawnTiles(mapData);
-            SpawnObjects(mapData);
         }
 
         public void SpawnTiles(Map mapData)
@@ -127,15 +126,9 @@ namespace GXPEngine
             myGame.playField = playField;
 
             // GameManager.CheckForTetris();
-            playField.SetXY(myGame.gameManager.playFieldCoordinateX, myGame.gameManager.playFieldCoordinateY);
             playField.SetScaleXY(1.6f,1.6f);
             AddChild(playField);
             
-        }
-
-        public void SpawnObjects(Map mapData)
-        {
-
         }
     }
 
