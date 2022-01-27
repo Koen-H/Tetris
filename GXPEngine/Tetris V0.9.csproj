@@ -84,6 +84,7 @@
     <Compile Include="Scene.cs" />
     <Compile Include="SceneObject.cs" />
     <Compile Include="ScoreDisplay.cs" />
+    <Compile Include="ScreenShake.cs" />
     <Compile Include="Tetris\Block.cs" />
     <Compile Include="Tetris\BlockCluster.cs" />
     <Compile Include="Tetris\CollisionBlock.cs" />

@@ -18,7 +18,7 @@ namespace GXPEngine
             myGame = (MyGame)game;
             CenterMode centerMode = CenterMode.Center;
             EasyDraw backgroundCanvas = new EasyDraw(700,400);
-            this.SetXY(game.width/2, game.height/2);
+            //this.SetXY(game.width/2, game.height/2);
             backgroundCanvas.Clear(100,100,100, 200);//background color
             backgroundCanvas.TextAlign(centerMode, centerMode);
             backgroundCanvas.ShapeAlign(centerMode, centerMode);
@@ -32,8 +32,8 @@ namespace GXPEngine
                 backgroundCanvas.Text("Your score is: " + finalScore + "\nYou didn't set a new highscore.\nTry again?");
             }
             
-            backgroundCanvas.SetXY(-(backgroundCanvas.width / 2), -(backgroundCanvas.height / 2));
-            backgroundCanvas.SetScaleXY(1.3f,1.3f);
+            backgroundCanvas.SetXY((game.width / 2) - (backgroundCanvas.width / 2), (game.height / 2) - (backgroundCanvas.height/2));
+            backgroundCanvas.SetScaleXY(1.0f,1.0f);
 
             EasyDraw topCanvas = new EasyDraw(700,100);
             topCanvas.Clear(0,255,255, 200);

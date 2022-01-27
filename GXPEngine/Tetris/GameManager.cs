@@ -153,6 +153,7 @@ namespace GXPEngine.Tetris
                     }
 
                 }
+
                 if (gameOver && Time.time > lastGridKilled + gridKillerInterval && yKillGrid != playFieldHeight)
                 {
                     DestroyGrid();
@@ -193,55 +194,6 @@ namespace GXPEngine.Tetris
             }
             Console.WriteLine("Difficulty is now: " + dropInterval);
         }
-       /* public void CreatePlayField(Pivot playField)//This code was used to generate a playfield, this has now been replaced with tiled. Keeping it as backup for now
-        {
-            Console.WriteLine("CreatingPlayField");
-            playField.SetXY(playFieldCoordinateX, playFieldCoordinateY);
-            if (playFieldWidth % 2 == 0) //Set the center of the playfield
-            {
-                playFieldCenterX = ((GameManager.playFieldWidth) * GameManager.blockSize) / 2;
-                playFieldCenterX += blockSize;// 1 extra block to the right.
-            }
-            else
-            {
-                playFieldCenterX = ((GameManager.playFieldWidth+1) * GameManager.blockSize) / 2;
-            }
-            //create the border
-            String blockColor = "gray_block_left.png";
-            for (int i = 0; i < (playFieldHeight + 1); i++) {//Border on the left;
-                Block borderLeft = new Block(0, i, blockColor, BlockType.WallLeft);
-                playField.AddChild(borderLeft);
-            }
-            blockColor = "gray_block_right.png";
-            for (int i = 0; i < (playFieldHeight + 1); i++)//Border on the right;
-            {
-                Block borderRight = new Block(playFieldWidth + 1, i, blockColor, BlockType.WallRight); //+1 to  make it a border
-                playField.AddChild(borderRight);
-            }
-            blockColor = "gray_block_bottom.png";
-            for (int i = 1; i < (playFieldWidth+1); i++)//Border on the bottom;
-            {
-                Block borderBottom = new Block(i, playFieldHeight, blockColor, BlockType.WallBottom);
-                playField.AddChild(borderBottom);
-            }
-            blockColor = "empty_block.png";
-            //For the background/grid system
-            grid = new Block[playFieldWidth, playFieldHeight];
-            int yGrid = 0;
-            while (yGrid < playFieldHeight)
-            {
-                int xGrid = 0;
-                while (xGrid < playFieldWidth)
-                {
-                    Block gridBlock = new Block((xGrid + 1), yGrid, blockColor, BlockType.Grid);
-                    playField.AddChild(gridBlock);
-                    grid[xGrid,yGrid] = gridBlock;
-                    ++xGrid;
-                }
-                ++yGrid;
-            }
-        }
-        */
 
         public void CheckForTetris(Boolean firstCheck)//check if there is a row filled.
         {
@@ -291,6 +243,11 @@ namespace GXPEngine.Tetris
                             break;
                         case 4:
                             new Sound("tetris_quad.wav").Play();
+                            if (myGame.enableScreenShake)
+                            {
+                                ScreenShake screenShake = new ScreenShake(myGame.playField, 500f, tetrisLines.Count());
+                                myGame.AddChild(screenShake);
+                            }
                             break;
                         default:
                             new Sound("tetris.wav").Play();
@@ -299,6 +256,7 @@ namespace GXPEngine.Tetris
                     
                     scoreDisplay.TetrisPoints(tetrisLines.Count());
                     IncreaseDifficulty();//increase the difficulty once if there was a tetris!
+
                 }
                 tetrisLines.Sort();// sort it from 1, 2, 3 etc
                 ClearTetrisLine(tetrisLines.First());
@@ -398,11 +356,11 @@ namespace GXPEngine.Tetris
             currentBlockCluster.SetXY(playFieldCenterX, playFieldCenterY);
             currentBlockCluster.SetScaleXY(1f,1f);//Change the blockcluster back to the size of the playfield
             upcomingBlockCluster.SetXY(upcomingBlockClusterX,upcomingBlockClusterY);
-            upcomingBlockCluster.SetScaleXY(1.6f,1.6f);// make the first upcoming block bigger to indicate it's the next one.
+            upcomingBlockCluster.SetScaleXY(1.7f,1.7f);// make the first upcoming block bigger to indicate it's the next one.
             upcomingBlockCluster2.SetXY(upcomingBlockClusterX, upcomingBlockClusterY + (blockSize * 6));
-            upcomingBlockCluster3.SetXY(upcomingBlockClusterX, upcomingBlockClusterY + (blockSize * 10));
-            upcomingBlockCluster2.SetScaleXY(1.2f, 1.2f);
-            upcomingBlockCluster3.SetScaleXY(1.2f, 1.2f);
+            upcomingBlockCluster3.SetXY(upcomingBlockClusterX, upcomingBlockClusterY + (blockSize * 12));
+            upcomingBlockCluster2.SetScaleXY(1.5f, 1.5f);
+            upcomingBlockCluster3.SetScaleXY(1.5f, 1.5f);
             myGame.AddChild(upcomingBlockCluster3);
             CreateGhostBlockCluster();
             savedBlockClusterCooldown = false;
@@ -485,7 +443,7 @@ namespace GXPEngine.Tetris
                     savedBlockCluster = swapBlockCluster;
                 }
                 myGame.AddChild(savedBlockCluster);
-                savedBlockCluster.SetScaleXY(1.6f, 1.6f);
+                savedBlockCluster.SetScaleXY(1.7f, 1.7f);
                 savedBlockCluster.SetXY(saveCoordinateX, saveCoordinateY);
                 savedBlockClusterCooldown = true;
                 CreateGhostBlockCluster();
@@ -501,6 +459,7 @@ namespace GXPEngine.Tetris
                 Console.WriteLine("Game over!");
                 currentBlockCluster.SetBlock();
                 currentBlockCluster.Destroy();
+                ghostBlockCluster.Hide();//Hide it, because if I use destroy it crashes the game.
                 new Sound("me_game_gameover.wav").Play();
                 myGame.PlayBackgroundMusic("game_over_background_music.wav");
                 int finalScore = scoreDisplay.score;
@@ -524,7 +483,7 @@ namespace GXPEngine.Tetris
         }
         public void SetScoreDisplayCoordinates(float _scoreDisplayX, float _scoreDisplayY)
         {
-            scoreDisplay = new ScoreDisplay();
+            scoreDisplay = new ScoreDisplay("Current Score");
             scoreDisplay.SetXY(_scoreDisplayX, _scoreDisplayY);
         }
         public void SetPlayfieldCoordinates(float _playFieldCoordinateX, float _playFieldCoordinateY)

@@ -10,6 +10,7 @@ public class MyGame : Game
     public GameManager gameManager;
     public string currentLevel;
     public HighscoresDisplay highscoreDisplay;
+    public Boolean enableScreenShake = true;
     //public Pivot uI = new Pivot();// This is the UI
     readonly private List<Button> buttonsList = new List<Button>();
     private Scene mainMenu;
@@ -31,11 +32,7 @@ public class MyGame : Game
      *  F1 = Diagnostics in console
      * 
      * 
-     * TODO: 
-     * - Make the game look good.
-     * - be able to have multiple scores
-     * - add some kind of name to the score
-     * 
+     * Sprites & Sound from Tetris99
      * */
 
 
@@ -80,7 +77,6 @@ public class MyGame : Game
         LoadScene(mainMenu);
         gameManager.QuitTetris();
         PlayBackgroundMusic("Main_Menu_Music.wav");
-
     }
 
     public void DestroyAll()

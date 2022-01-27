@@ -547,6 +547,7 @@ namespace GXPEngine.Tetris
         
             if (RotationCheck())//check if rotation is broken, if it returns true. Set back to original position.
             {
+                new Sound("denied.wav").Play();
                 this.rotation =resetRotation;
                 this.x = resetX;
                 this.y = resetY;
@@ -583,6 +584,7 @@ namespace GXPEngine.Tetris
 
             if (RotationCheck())//check if rotation is broken, if it returns true. Set back to original position.
             {
+                new Sound("denied.wav").Play();
                 this.rotation = resetRotation;
                 this.x = resetX;
                 this.y = resetY;
@@ -608,9 +610,8 @@ namespace GXPEngine.Tetris
             
         }
 
-        private Boolean RotationCheck()//TODO: Ask teacher how to optimize this, he said it was fine.
+        private Boolean RotationCheck()//Asked the teacher on how to optimize this, he said it was fine.
         {
-            Boolean resetToOriginal = false;
             if (IsCollidingWithWall(true) ){// if it's inside the wall on the left
                 if (!IsColliding(colliderBlocksRight))// and can go right
                 {
@@ -624,13 +625,13 @@ namespace GXPEngine.Tetris
                         }
                         else// if not, Move back to original position.
                         {
-                            resetToOriginal = true;
+                            return true;
                         }
                     }
                 }
                 else// if not, Move back.
                 {
-                    resetToOriginal = true;
+                    return true;
                 }
             }
             else if (IsCollidingWithWall(false))
@@ -647,13 +648,30 @@ namespace GXPEngine.Tetris
                         }
                         else// if not, Move back to original position. and it can't rotate
                         {
-                            resetToOriginal = true;
+                            return true;
                         }
                     }
                 }
                 else// if not, Move back.
                 {
-                    resetToOriginal = true;
+                    return true;
+                }
+            }else if (IsCollidingWithBottomOrTop(false))
+            {
+                if (!IsColliding(colliderBlocksBottom))
+                {
+                    MoveDown();
+                }
+                if (IsCollidingWithBottomOrTop(false))
+                {
+                    if (!IsColliding(colliderBlocksBottom))
+                    {
+                        MoveDown();
+                    }
+                    else
+                    {
+                        return true;
+                    }
                 }
             }
             else if (IsCollidingWithBottomOrTop(true))
@@ -671,13 +689,13 @@ namespace GXPEngine.Tetris
                         }
                         else// if not, Move back to original position.
                         {
-                            resetToOriginal = true;
+                            return true;
                         }
                     }
                 }
                 else// if not, Move back.
                 {
-                    resetToOriginal = true;
+                    return true;
                 }
             }
             if (IsColliding(blocks)) //OPTIMISE
@@ -702,14 +720,16 @@ namespace GXPEngine.Tetris
                                         MoveLeft();
                                         if (IsColliding(blocks))// if it's still inside a block, no rotation can be done and it should go back to roiginal
                                         {
-                                            resetToOriginal = true;
                                             rotatedUpwards = false;
+                                            return true;
+                                            
                                         }
                                     }
                                     else// if not, no rotation is happening!
                                     {
-                                        resetToOriginal = true;
                                         rotatedUpwards = false;
+                                        return true;
+                                        
                                     }
                                 }
                             }
@@ -718,12 +738,12 @@ namespace GXPEngine.Tetris
                                 MoveLeft();
                                 if (IsColliding(blocks))// if it's still inside a block, no rotation can be done and it should go back to roiginal
                                 {
-                                    resetToOriginal = true;
+                                    return true;
                                 }
                             }
                             else// if not, no rotation is happening!
                             {
-                                resetToOriginal = true;
+                                return true;
                             }
 
                         }
@@ -743,7 +763,7 @@ namespace GXPEngine.Tetris
                                 MoveLeft();
                                 if (IsColliding(blocks) || IsCollidingWithWall(false) || IsCollidingWithWall(true))// if it's still inside a block or wall, no rotation can be done and it should go back to original
                                 {
-                                    resetToOriginal = true;
+                                    return true;
                                 }
                             }
                             else
@@ -758,7 +778,7 @@ namespace GXPEngine.Tetris
                         this.x -= blockSize;
                         if (IsColliding(blocks) || IsCollidingWithWall(false) || IsCollidingWithWall(true))// if it's still inside a block or wall, no rotation can be done and it should go back to roiginal
                         {
-                            resetToOriginal = true;
+                            return true;
                         }
                     }
                     else// if not, no rotation is happening!
@@ -767,7 +787,7 @@ namespace GXPEngine.Tetris
                     }
                 }
             }
-            return resetToOriginal;
+            return false;
         }
 
         public Boolean IsColliding(List<CollisionBlock> colliderBlocksList)
@@ -822,6 +842,13 @@ namespace GXPEngine.Tetris
             }
 
             return false;
+        }
+        public void Hide()
+        {
+            foreach(Block block in blocks)
+            {
+                block.alpha = 0;
+            }
         }
     }
 }

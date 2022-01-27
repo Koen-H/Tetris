@@ -11,9 +11,9 @@ namespace GXPEngine
         public int score;
         EasyDraw canvas;
 
-        public ScoreDisplay()
+        public ScoreDisplay(string topText)
         {
-            canvas = new EasyDraw(100, 75);
+            canvas = new EasyDraw(88, 75);
             canvas.Clear(0);
             canvas.Fill(0, 212, 240);
             CenterMode mode = CenterMode.Center;
@@ -22,8 +22,20 @@ namespace GXPEngine
             canvas.ShapeAlign(mode, mode);
             canvas.Text(text);
             canvas.SetScaleXY(2, 2);
-            canvas.SetXY(-(canvas.width / 2), -(canvas.height / 2));
+            canvas.SetXY(-(canvas.width / 2)-12, -(canvas.height / 2));
+
+            EasyDraw topCanvas = new EasyDraw(88, 25);
+            topCanvas.Clear(0, 255, 255);
+            topCanvas.Fill(255, 0, 0);
+            topCanvas.TextAlign(CenterMode.Center, CenterMode.Center);
+            topCanvas.ShapeAlign(CenterMode.Center, CenterMode.Center);
+            topCanvas.TextSize(10);
+            topCanvas.Text(topText);
+            topCanvas.SetScaleXY(2, 2);
+            topCanvas.SetXY(-(topCanvas.width / 2) -12, -(topCanvas.height) * 2);
+           
             this.AddChild(canvas);
+            AddChild(topCanvas);
         }
 
         public void ApplyPoints(int points)// and update score

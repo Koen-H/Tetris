@@ -17,20 +17,12 @@ namespace GXPEngine
         public HighscoresDisplay(string _currentLevel)
         {
             currentLevel = _currentLevel;
-            EasyDraw topCanvas = new EasyDraw(100, 25);
-            topCanvas.Clear(0, 255, 255);
-            topCanvas.Fill(255, 0, 0);
-            topCanvas.TextAlign(CenterMode.Center, CenterMode.Center);
-            topCanvas.ShapeAlign(CenterMode.Center, CenterMode.Center);
-            topCanvas.TextSize(10);
-            topCanvas.Text("Highest score");//TODO:Replace with High scores once implemented.
-            topCanvas.SetScaleXY(2, 2);
-            topCanvas.SetXY(-(topCanvas.width / 2), -(topCanvas.height)*2);
-            scoreDisplay = new ScoreDisplay();
+            
+            scoreDisplay = new ScoreDisplay("High Score");
             LoadData(currentLevel + ".txt");
             scoreDisplay.SetScore(savedScore);
             AddChild(scoreDisplay);
-            AddChild(topCanvas);//Note, topcanvas AFTER scoreDisplay so it is on top of it.
+            
             Console.WriteLine(savedScore);
         }
 
